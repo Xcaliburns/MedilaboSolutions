@@ -1,6 +1,36 @@
-﻿namespace MedilaboSolutionsBack1.Repositories
+﻿using MedilaboSolutionsBack1.Data;
+using MedilaboSolutionsBack1.Interfaces;
+using MedilaboSolutionsBack1.Models;
+using System.Collections.Generic;
+using System.Linq;
+
+
+namespace MedilaboSolutionsBack1.Repositories
 {
-    public class PatientRepository
+    public class PatientRepository : IPatientRepository
     {
+        private readonly ApplicationDbContext _context;
+
+        public PatientRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public List<Patient> GetAllPatients()
+        {
+            return _context.Patients.ToList();
+        }
+
+        public Patient GetPatientById(int id)
+        {
+            return _context.Patients.FirstOrDefault(p => p.Id == id);
+        }
+
+        public void UpdatePatient(Patient patient)
+        {
+            _context.Patients.Update(patient);
+            _context.SaveChanges();
+        }
+
     }
 }
