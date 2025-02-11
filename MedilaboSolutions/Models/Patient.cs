@@ -14,7 +14,7 @@ namespace MedilaboSolutionsBack1.Models
         public DateTime DateDeNaissance { get; set; }
         [Required]
         public string Genre { get; set; }
-        [Required]
+       
         public string Adresse { get; set; }
         public string Telephone { get; set; }
     }
