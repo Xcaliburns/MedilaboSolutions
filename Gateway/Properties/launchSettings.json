@@ -20,7 +20,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    //TODO : cette partie est elle nécessaire ?
+    //configuration de l'application pour le lancement en mode IIS Express (Gateway.http)
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
