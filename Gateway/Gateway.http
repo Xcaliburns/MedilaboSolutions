@@ -1,0 +1,28 @@
+@Gateway_HostAddress = http://localhost:5000
+
+GET {{Gateway_HostAddress}}/patient
+Accept: application/json
+
+###
+
+GET {{Gateway_HostAddress}}/patient/1
+Accept: application/json
+
+###
+
+POST {{Gateway_HostAddress}}/patient/Edit/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "nom": "John",
+  "prenom": "Doe",
+  "dateDeNaissance": "1980-01-01",
+  "genre": "Male",
+  "adresse": "123 Main St",
+  "telephone": "123-456-7890"
+}
+
+###
+
+
