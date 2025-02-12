@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using MedilaboSolutionsBack1.Interfaces;
+using Microsoft.AspNetCore.Authorization; 
 
 namespace MedilaboSolutionsBack1.Controllers
 {
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Organisateur,Praticien")]
     public class PatientController : ControllerBase
     {
         private readonly IPatientService _patientService;
