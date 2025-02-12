@@ -1,0 +1,21 @@
+
+    {
+      "Routes": [
+        {
+          "DownstreamPathTemplate": "/api/Patient",
+          "DownstreamScheme": "https",
+          "DownstreamHostAndPorts": [
+            {
+              "Host": "localhost",
+              "Port": 7088
+            }
+          ],
+          "UpstreamPathTemplate": "/patient",
+          "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ] // ajout de la méthode DELETE et PUT en prévision
+        }
+      ],
+      "GlobalConfiguration": {
+        "BaseUrl": "https://localhost:5000"
+      }
+    }
+
