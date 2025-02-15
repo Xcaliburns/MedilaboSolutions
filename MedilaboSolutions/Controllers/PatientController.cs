@@ -42,8 +42,10 @@ namespace MedilaboSolutionsBack1.Controllers
             return Ok(patient);
         }
 
-        // POST: api/Patient/Edit/5
-        [HttpPost("Edit/{id}")]
+
+     
+        // PUT: api/Patient/Edit/5   
+        [HttpPut("Edit/{id}")]
         public ActionResult Edit(int id, [FromBody] Patient updatedPatient)
         {
             try
