@@ -10,7 +10,11 @@
         }
       ],
       "UpstreamPathTemplate": "/patient/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT" ]
+      "UpstreamHttpMethod": [ "GET", "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Cookies",
+        "AllowedScopes": []
+      }
     },
     {
       "DownstreamPathTemplate": "/api/Patient",
@@ -22,7 +26,11 @@
         }
       ],
       "UpstreamPathTemplate": "/patient",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Cookies",
+        "AllowedScopes": []
+      }
     },
     {
       "DownstreamPathTemplate": "/api/Patient/Edit/{id}",
@@ -34,6 +42,34 @@
         }
       ],
       "UpstreamPathTemplate": "/patient/Edit/{id}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Cookies",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/login",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7088
+        }
+      ],
+      "UpstreamPathTemplate": "/auth/login",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/logout",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7088
+        }
+      ],
+      "UpstreamPathTemplate": "/auth/logout",
       "UpstreamHttpMethod": [ "POST" ]
     }
   ],

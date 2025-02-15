@@ -42,7 +42,9 @@ namespace MedilaboSolutionsBack1.Controllers
             return Ok(patient);
         }
 
-        // POST: api/Patient/Edit/5
+
+        //TODO : essayer avec un put ou un patch
+        // POST: api/Patient/Edit/5   
         [HttpPost("Edit/{id}")]
         public ActionResult Edit(int id, [FromBody] Patient updatedPatient)
         {

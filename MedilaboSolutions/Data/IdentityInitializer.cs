@@ -22,7 +22,7 @@ namespace MedilaboSolutionsBack1.Data
                 }
             }
 
-            // Crée default Organisateur 
+            // Crée un Organisateur 
             var organisateur = new IdentityUser
             {
                 UserName = "organisateur",
