@@ -1,35 +1,50 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Ajouter la configuration Ocelot
+// Add Ocelot configuration
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
-// Ajouter les services Ocelot
+// Add Ocelot services
 builder.Services.AddOcelot(builder.Configuration);
 
-// Ajouter les services de contrôleur si nécessaire
+// Add controller services if necessary
 builder.Services.AddControllers();
 
-// Configurer l'authentification basée sur les cookies
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)//.addJwtBearer(options => {})
-    .AddCookie(options =>
+// Configure JWT authentication
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer("Bearer", options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.LoginPath = "/auth/login"; // Correspond à /api/auth/login dans AuthController
-        options.LogoutPath = "/auth/logout"; // Correspond à /api/auth/logout dans AuthController
-    });
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
+    };
+});
 
 var app = builder.Build();
 
-// Configurer le pipeline de requêtes HTTP
+// Configure the HTTP request pipeline
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Utiliser le middleware Ocelot
-app.UseOcelot().Wait();
+// Use Ocelot middleware
+await app.UseOcelot();
 
 app.Run();

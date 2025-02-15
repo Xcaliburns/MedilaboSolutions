@@ -10,9 +10,9 @@
         }
       ],
       "UpstreamPathTemplate": "/patient/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT" ],
+      "UpstreamHttpMethod": [ "GET", "PUT", "POST", "DELETE" ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Cookies",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
     },
@@ -28,7 +28,7 @@
       "UpstreamPathTemplate": "/patient",
       "UpstreamHttpMethod": [ "GET", "POST" ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Cookies",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
     },
@@ -42,14 +42,14 @@
         }
       ],
       "UpstreamPathTemplate": "/patient/Edit/{id}",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [ "PUT" ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Cookies",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
     },
     {
-      "DownstreamPathTemplate": "/api/auth/login",
+      "DownstreamPathTemplate": "/api/Auth/login",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -61,7 +61,7 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/auth/logout",
+      "DownstreamPathTemplate": "/api/Auth/logout",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
