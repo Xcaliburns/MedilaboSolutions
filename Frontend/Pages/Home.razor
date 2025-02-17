@@ -1,0 +1,82 @@
+﻿@page "/"
+@using Frontend.Models
+@inject IHttpClientFactory ClientFactory
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+
+<PageTitle>Home</PageTitle>
+
+<h1>Patient List</h1>
+
+@if (!isAuthenticated)
+{
+    <p>Veuillez vous connecter pour accéder à la liste des patients.</p>
+    <button @onclick="NavigateToLogin">Se connecter</button>
+}
+else
+{
+    @if (patients == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else if (patients.Count == 0)
+    {
+        <p>No patients found.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Date de Naissance</th>
+                    <th>Genre</th>
+                    <th>Adresse</th>
+                    <th>Téléphone</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var patient in patients)
+                {
+                    <tr>
+                        <td>@patient.Id</td>
+                        <td>@patient.Nom</td>
+                        <td>@patient.Prenom</td>
+                        <td>@patient.DateDeNaissance.ToShortDateString()</td>
+                        <td>@patient.Genre</td>
+                        <td>@patient.Adresse</td>
+                        <td>@patient.Telephone</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@code {
+    private List<Patient>? patients;
+    private bool isAuthenticated = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = ClientFactory.CreateClient("AuthenticatedClient");
+        var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+        if (!string.IsNullOrEmpty(token))
+        {
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            patients = await client.GetFromJsonAsync<List<Patient>>("https://localhost:7214/patient"); // Use relative URL
+            isAuthenticated = true;
+        }
+        else
+        {
+            isAuthenticated = false;
+        }
+    }
+
+    private void NavigateToLogin()
+    {
+        Navigation.NavigateTo("/login");
+    }
+}
