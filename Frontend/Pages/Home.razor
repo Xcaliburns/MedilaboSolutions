@@ -1,7 +1,7 @@
 ﻿@page "/"
 @using Frontend.Models
-@inject IHttpClientFactory ClientFactory
-@inject IJSRuntime JSRuntime
+@using Frontend.Services
+@inject DataService DataService
 @inject NavigationManager Navigation
 
 <PageTitle>Home</PageTitle>
@@ -41,7 +41,6 @@ else
                 @foreach (var patient in patients)
                 {
                     <tr>
-                       
                         <td>@patient.Id</td>
                         <td>@patient.Nom</td>
                         <td>@patient.Prenom</td>
@@ -49,7 +48,7 @@ else
                         <td>@patient.Genre</td>
                         <td>@patient.Adresse</td>
                         <td>@patient.Telephone</td>
-                        <a href="@($"/details/{patient.Id}")">Détails</a>
+                        <td><a href="@($"/details/{patient.Id}")">Détails</a></td>
                     </tr>
                 }
             </tbody>
@@ -63,17 +62,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var client = ClientFactory.CreateClient("AuthenticatedClient");
-        var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
-        if (!string.IsNullOrEmpty(token))
+        var result = await DataService.GetAuthenticatedDataAsync<List<Patient>>("https://localhost:7214/patient");
+        isAuthenticated = result.isAuthenticated;
+        if (isAuthenticated)
         {
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            patients = await client.GetFromJsonAsync<List<Patient>>("https://localhost:7214/patient"); // Use relative URL
-            isAuthenticated = true;
-        }
-        else
-        {
-            isAuthenticated = false;
+            patients = result.data;
         }
     }
 

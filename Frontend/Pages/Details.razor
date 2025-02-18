@@ -1,7 +1,7 @@
 ﻿@page "/details/{id:int}"
 @using Frontend.Models
-@inject IHttpClientFactory ClientFactory
-@inject IJSRuntime JSRuntime
+@using Frontend.Services
+@inject DataService DataService
 @inject NavigationManager Navigation
 
 <PageTitle>Patient Details</PageTitle>
@@ -63,33 +63,23 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var client = ClientFactory.CreateClient("AuthenticatedClient");
-        var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
-        if (!string.IsNullOrEmpty(token))
+        var result = await DataService.GetAuthenticatedDataAsync<Patient>($"https://localhost:7214/patient/{Id}");
+        isAuthenticated = result.isAuthenticated;
+        if (isAuthenticated)
         {
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            patient = await client.GetFromJsonAsync<Patient>($"https://localhost:7214/patient/{Id}");
-            isAuthenticated = true;
-        }
-        else
-        {
-            isAuthenticated = false;
+            patient = result.data;
         }
     }
 
     private async Task SaveChanges()
     {
-        var client = ClientFactory.CreateClient("AuthenticatedClient");
-        var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
-        if (!string.IsNullOrEmpty(token))
+        if (isAuthenticated)
         {
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            await client.PutAsJsonAsync($"https://localhost:7214/patient/edit/{Id}", patient);
+            await DataService.SaveDataAsync($"https://localhost:7214/patient/edit/{Id}", patient);
             Navigation.NavigateTo("/");
         }
         else
         {
-            isAuthenticated = false;
             securityMessage = "Par mesure de sécurité, nous vous invitons à vous connecter à nouveau.";
         }
     }

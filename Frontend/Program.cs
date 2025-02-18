@@ -11,6 +11,9 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+// Enregistrer AuthenticatedHttpClientHandler
+builder.Services.AddTransient<AuthenticatedHttpClientHandler>();
+
 // Configure HttpClient to use the Ocelot Gateway URL for the named client
 builder.Services.AddHttpClient("AuthenticatedClient", client =>
 {
@@ -23,7 +26,6 @@ builder.Services.AddOidcAuthentication(options =>
     options.UserOptions.RoleClaim = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"; // Assurez-vous que le claim du rôle est correctement défini
 });
 
-builder.Services.AddScoped<PatientService>();
-builder.Services.AddTransient<Frontend.Helpers.AuthenticatedHttpClientHandler>();
+builder.Services.AddScoped<DataService>();
 
 await builder.Build().RunAsync();
