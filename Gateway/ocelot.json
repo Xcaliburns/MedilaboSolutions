@@ -41,7 +41,7 @@
           "Port": 7088
         }
       ],
-      "UpstreamPathTemplate": "/patient/Edit/{id}",
+      "UpstreamPathTemplate": "/patient/edit/{id}",
       "UpstreamHttpMethod": [ "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
