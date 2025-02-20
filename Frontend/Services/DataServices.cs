@@ -1,5 +1,9 @@
-﻿using Microsoft.JSInterop;
+﻿
+using Frontend.Models;
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System.Net.Http.Json;
+
 
 namespace Frontend.Services
 {
@@ -59,5 +63,23 @@ namespace Frontend.Services
             }
             return (false, default);
         }
+
+        public async Task CreatePatient(Patient patient)
+        {
+            if (string.IsNullOrEmpty(patient.Nom) || string.IsNullOrEmpty(patient.Prenom) || patient.DateDeNaissance == default || string.IsNullOrEmpty(patient.Genre))
+            {
+                throw new ArgumentException("Les propriétés requises du patient ne sont pas renseignées.");
+            }
+
+           
+            patient.Adresse ??= string.Empty;
+            patient.Telephone ??= string.Empty;
+
+            var client = await GetAuthenticatedClientAsync();
+            var response = await client.PostAsJsonAsync("/patient/create", patient);
+            response.EnsureSuccessStatusCode();
+        }
+
+
     }
 }

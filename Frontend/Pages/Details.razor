@@ -2,6 +2,7 @@
 @using Frontend.Models
 @using Frontend.Services
 @inject DataService DataService
+@inject RedirectToLogin RedirectToLogin
 @inject NavigationManager Navigation
 
 <PageTitle>Patient Details</PageTitle>
@@ -11,7 +12,7 @@
 @if (!isAuthenticated)
 {
     <p>Veuillez vous connecter pour accéder aux détails du patient.</p>
-    <button @onclick="NavigateToLogin">Se connecter</button>
+    <button class="btn btn-primary" @onclick="NavigateToLogin">Se connecter</button>
 }
 else
 {
@@ -21,71 +22,36 @@ else
     }
     else
     {
-        <div>
-            <label>Nom: </label>
-            <input @bind="patient.Nom" />
+        <div class="container">
+            <div class="mb-3">
+                <label class="form-label">Nom: </label>
+                <input class="form-control" @bind="patient.Nom" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Prénom: </label>
+                <input class="form-control" @bind="patient.Prenom" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Date de Naissance: </label>
+                <input type="date" class="form-control" @bind="patient.DateDeNaissance" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Genre: </label>
+                <input class="form-control" @bind="patient.Genre" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Adresse: </label>
+                <input class="form-control" @bind="patient.Adresse" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Téléphone: </label>
+                <input class="form-control" @bind="patient.Telephone" />
+            </div>
+            <button class="btn btn-success" @onclick="SaveChanges">Enregistrer</button>
+            @if (!string.IsNullOrEmpty(securityMessage))
+            {
+                <p class="text-danger">@securityMessage</p>
+            }
         </div>
-        <div>
-            <label>Prénom: </label>
-            <input @bind="patient.Prenom" />
-        </div>
-        <div>
-            <label>Date de Naissance: </label>
-            <input type="date" @bind="patient.DateDeNaissance" />
-        </div>
-        <div>
-            <label>Genre: </label>
-            <input @bind="patient.Genre" />
-        </div>
-        <div>
-            <label>Adresse: </label>
-            <input @bind="patient.Adresse" />
-        </div>
-        <div>
-            <label>Téléphone: </label>
-            <input @bind="patient.Telephone" />
-        </div>
-        <button @onclick="SaveChanges">Enregistrer</button>
-        @if (!string.IsNullOrEmpty(securityMessage))
-        {
-            <p style="color:red;">@securityMessage</p>
-        }
-    }
-}
-
-@code {
-    [Parameter]
-    public int Id { get; set; }
-
-    private Patient? patient;
-    private bool isAuthenticated = false;
-    private string? securityMessage;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var result = await DataService.GetAuthenticatedDataAsync<Patient>($"https://localhost:7214/patient/{Id}");
-        isAuthenticated = result.isAuthenticated;
-        if (isAuthenticated)
-        {
-            patient = result.data;
-        }
-    }
-
-    private async Task SaveChanges()
-    {
-        if (isAuthenticated)
-        {
-            await DataService.SaveDataAsync($"https://localhost:7214/patient/edit/{Id}", patient);
-            Navigation.NavigateTo("/");
-        }
-        else
-        {
-            securityMessage = "Par mesure de sécurité, nous vous invitons à vous connecter à nouveau.";
-        }
-    }
-
-    private void NavigateToLogin()
-    {
-        Navigation.NavigateTo("/login");
     }
 }
