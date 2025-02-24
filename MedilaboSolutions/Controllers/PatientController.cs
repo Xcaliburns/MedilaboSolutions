@@ -41,6 +41,22 @@ namespace MedilaboSolutionsBack1.Controllers
             return Ok(patient);
         }
 
+        // POST: api/Patient/Create
+        [HttpPost("Create")]
+        public ActionResult Create([FromBody] Patient patient)
+        {
+            try
+            {
+                // Add the patient to the database
+                _patientService.CreatePatient(patient);
+                return Ok(patient);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
         // PUT: api/Patient/Edit/5   
         [HttpPut("Edit/{id}")]
         public ActionResult Edit(int id, [FromBody] Patient updatedPatient)

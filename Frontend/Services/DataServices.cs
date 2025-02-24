@@ -1,5 +1,9 @@
-﻿using Microsoft.JSInterop;
+﻿
+using Frontend.Models;
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System.Net.Http.Json;
+
 
 namespace Frontend.Services
 {
@@ -49,15 +53,40 @@ namespace Frontend.Services
             await client.PutAsJsonAsync(endpoint, data);
         }
 
-        public async Task<(bool isAuthenticated, T? data)> GetAuthenticatedDataAsync<T>(string endpoint)
+        public async Task<(bool isAuthenticated, T? data, string? errorMessage)> GetAuthenticatedDataAsync<T>(string endpoint)
         {
             var isAuthenticated = await IsAuthenticatedAsync();
             if (isAuthenticated)
             {
-                var data = await GetSingleDataAsync<T>(endpoint);
-                return (true, data);
+                try
+                {
+                    var data = await GetSingleDataAsync<T>(endpoint);
+                    return (true, data, null);
+                }
+                catch (Exception ex)
+                {
+                    return (true, default, ex.Message);
+                }
             }
-            return (false, default);
+            return (false, default, "User is not authenticated");
         }
+
+        public async Task CreatePatient(Patient patient)
+        {
+            if (string.IsNullOrEmpty(patient.Nom) || string.IsNullOrEmpty(patient.Prenom) || patient.DateDeNaissance == default || string.IsNullOrEmpty(patient.Genre))
+            {
+                throw new ArgumentException("Les propriétés requises du patient ne sont pas renseignées.");
+            }
+
+           
+            patient.Adresse ??= string.Empty;
+            patient.Telephone ??= string.Empty;
+
+            var client = await GetAuthenticatedClientAsync();
+            var response = await client.PostAsJsonAsync("/patient/create", patient);
+            response.EnsureSuccessStatusCode();
+        }
+
+
     }
 }

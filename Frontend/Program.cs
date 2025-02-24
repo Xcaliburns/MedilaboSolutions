@@ -18,7 +18,8 @@ builder.Services.AddTransient<AuthenticatedHttpClientHandler>();
 builder.Services.AddHttpClient("AuthenticatedClient", client =>
 {
     client.BaseAddress = new Uri("https://localhost:7214");
-}).AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+});
+    //.AddHttpMessageHandler<AuthenticatedHttpClientHandler>();//supprimé pour changer les adresses
 
 builder.Services.AddOidcAuthentication(options =>
 {
@@ -27,5 +28,7 @@ builder.Services.AddOidcAuthentication(options =>
 });
 
 builder.Services.AddScoped<DataService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<RedirectToLogin>();
 
 await builder.Build().RunAsync();

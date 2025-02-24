@@ -1,10 +1,7 @@
 ﻿@page "/login"
 @using Frontend.Models
-@using System.IdentityModel.Tokens.Jwt
-@using System.Linq
-@inject HttpClient Http
-@inject NavigationManager Navigation
-@inject IJSRuntime JSRuntime
+@using Frontend.Services
+@inject AuthService AuthService
 
 <h3>Connexion</h3>
 
@@ -24,41 +21,3 @@
 </EditForm>
 
 
-@* TODO : à deplacer *@
-@code {
-    private LoginModel loginModel = new LoginModel();
-
-    private async Task HandleLogin()
-    {
-        var response = await Http.PostAsJsonAsync("https://localhost:7214/auth/login", loginModel);
-        if (response.IsSuccessStatusCode)
-        {
-            var responseContent = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"Response Content: {responseContent}");
-
-            var result = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
-            if (result != null && result.TryGetValue("token", out var token))
-            {
-                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", token);
-
-                // Decode the JWT token and log the role to the console
-                var handler = new JwtSecurityTokenHandler();
-                var jwtToken = handler.ReadJwtToken(token);
-                var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
-                Console.WriteLine($"Role: {roleClaim}");
-
-                Navigation.NavigateTo("/");
-            }
-            else
-            {
-               
-                Console.WriteLine("Token not found in response");
-            }
-        }
-        else
-        {
-            
-            Console.WriteLine("Login failed");
-        }
-    }
-}

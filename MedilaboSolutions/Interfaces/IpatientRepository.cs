@@ -8,5 +8,6 @@ namespace MedilaboSolutionsBack1.Interfaces
         List<Patient> GetAllPatients();
         Patient GetPatientById(int id);
         void UpdatePatient(Patient patient);
+        void CreatePatient(Patient patient); // Ajout de la méthode CreatePatient
     }
 }

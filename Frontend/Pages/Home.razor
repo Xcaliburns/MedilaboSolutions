@@ -2,6 +2,7 @@
 @using Frontend.Models
 @using Frontend.Services
 @inject DataService DataService
+@inject RedirectToLogin RedirectToLogin
 @inject NavigationManager Navigation
 
 <PageTitle>Home</PageTitle>
@@ -15,9 +16,13 @@
 }
 else
 {
-    @if (patients == null)
+    @if (!string.IsNullOrEmpty(errorMessage))
     {
-        <p><em>Loading...</em></p>
+        <p class="text-danger">@errorMessage</p>
+    }
+    else if (patients == null)
+    {
+        <p><em>pas de patient trouvé</em></p>
     }
     else if (patients.Count == 0)
     {
@@ -27,21 +32,20 @@ else
     {
         <table class="table">
             <thead>
-                <tr>
-                    <th>Id</th>
+                <tr>                   
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Date de Naissance</th>
                     <th>Genre</th>
                     <th>Adresse</th>
                     <th>Téléphone</th>
+                    <th>Détails</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var patient in patients)
                 {
-                    <tr>
-                        <td>@patient.Id</td>
+                    <tr>                       
                         <td>@patient.Nom</td>
                         <td>@patient.Prenom</td>
                         <td>@patient.DateDeNaissance.ToShortDateString()</td>
@@ -53,25 +57,5 @@ else
                 }
             </tbody>
         </table>
-    }
-}
-
-@code {
-    private List<Patient>? patients;
-    private bool isAuthenticated = false;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var result = await DataService.GetAuthenticatedDataAsync<List<Patient>>("https://localhost:7214/patient");
-        isAuthenticated = result.isAuthenticated;
-        if (isAuthenticated)
-        {
-            patients = result.data;
-        }
-    }
-
-    private void NavigateToLogin()
-    {
-        Navigation.NavigateTo("/login");
     }
 }

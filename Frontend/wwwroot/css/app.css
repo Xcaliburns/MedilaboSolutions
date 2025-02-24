@@ -101,3 +101,43 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+.navbar-custom {
+    background-color: #f8f9fa; /* Change this to your desired background color */
+}
+
+.navbar {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.navbar-brand {
+    color: #333;
+    font-weight: bold;
+}
+
+.navbar-toggler {
+    border: none;
+    color: black;
+}
+
+.nav-link {
+    color:  black;
+    padding: 10px 15px;
+}
+
+    .nav-link:hover {
+        background-color: #f8f9fa;
+    }
+
+.nav-item button {
+    border: none;
+    background: none;
+    color: black;
+    padding: 10px 15px;
+    
+}
+
+    .nav-item button:hover {
+        background-color: #f8f9fa;
+    }

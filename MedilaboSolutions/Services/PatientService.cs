@@ -27,5 +27,10 @@ namespace MedilaboSolutionsBack1.Services
         {
             _patientRepository.UpdatePatient(patient);
         }
+
+        public void CreatePatient(Patient patient) // Implémentation de la méthode CreatePatient
+        {
+            _patientRepository.CreatePatient(patient);
+        }
     }
 }

@@ -32,5 +32,10 @@ namespace MedilaboSolutionsBack1.Repositories
             _context.SaveChanges();
         }
 
+        public void CreatePatient(Patient patient) // Implémentation de la méthode CreatePatient
+        {
+            _context.Patients.Add(patient);
+            _context.SaveChanges();
+        }
     }
 }
