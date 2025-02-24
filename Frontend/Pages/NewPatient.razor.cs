@@ -31,7 +31,7 @@ namespace Frontend.Pages
             try
             {
                 await DataService.CreatePatient(newPatient);
-                Navigation.NavigateTo("/"); // Redirigez vers la liste des patients après l'ajout
+                Navigation.NavigateTo("/");
             }
             catch (Exception ex)
             {

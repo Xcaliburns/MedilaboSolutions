@@ -12,15 +12,25 @@ namespace Frontend.Pages
         private Patient? patient;
         private bool isAuthenticated = false;
         private string? securityMessage;
-        //private string adress = "https://localhost:7214/patient/{0}";
-
-        protected override async Task OnInitializedAsync()
+       
+protected override async Task OnInitializedAsync()
         {
             var result = await DataService.GetAuthenticatedDataAsync<Patient>($"/patient/{Id}");
             isAuthenticated = result.isAuthenticated;
             if (isAuthenticated)
             {
-                patient = result.data;
+                if (result.data != null)
+                {
+                    patient = result.data;
+                }
+                else
+                {
+                    securityMessage = result.errorMessage ?? "An unknown error occurred.";
+                }
+            }
+            else
+            {
+                securityMessage = "User is not authenticated.";
             }
         }
 

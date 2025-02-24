@@ -16,9 +16,13 @@
 }
 else
 {
-    @if (patients == null)
+    @if (!string.IsNullOrEmpty(errorMessage))
     {
-        <p><em>Chargement...</em></p>
+        <p class="text-danger">@errorMessage</p>
+    }
+    else if (patients == null)
+    {
+        <p><em>pas de patient trouvé</em></p>
     }
     else if (patients.Count == 0)
     {
@@ -55,6 +59,3 @@ else
         </table>
     }
 }
-
-
-

@@ -53,15 +53,22 @@ namespace Frontend.Services
             await client.PutAsJsonAsync(endpoint, data);
         }
 
-        public async Task<(bool isAuthenticated, T? data)> GetAuthenticatedDataAsync<T>(string endpoint)
+        public async Task<(bool isAuthenticated, T? data, string? errorMessage)> GetAuthenticatedDataAsync<T>(string endpoint)
         {
             var isAuthenticated = await IsAuthenticatedAsync();
             if (isAuthenticated)
             {
-                var data = await GetSingleDataAsync<T>(endpoint);
-                return (true, data);
+                try
+                {
+                    var data = await GetSingleDataAsync<T>(endpoint);
+                    return (true, data, null);
+                }
+                catch (Exception ex)
+                {
+                    return (true, default, ex.Message);
+                }
             }
-            return (false, default);
+            return (false, default, "User is not authenticated");
         }
 
         public async Task CreatePatient(Patient patient)
