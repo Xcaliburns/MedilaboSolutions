@@ -1,0 +1,49 @@
+﻿@page
+@model FrontendRazor.Pages.IndexModel
+@{
+    ViewData["Title"] = "Liste des patients";
+}
+
+<h2>Liste des patients</h2>
+
+@if (Model.IsAuthenticated && Model.IsAuthorized)
+{
+    if (Model.Patients != null && Model.Patients.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Date de Naissance</th>
+                    <th>Genre</th>
+                    <th>Adresse</th>
+                    <th>Téléphone</th>
+                    <th>Détails</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var patient in Model.Patients)
+                {
+                    <tr>
+                        <td>@patient.Nom</td>
+                        <td>@patient.Prenom</td>
+                        <td>@patient.DateDeNaissance.ToShortDateString()</td>
+                        <td>@patient.Genre</td>
+                        <td>@patient.Adresse</td>
+                        <td>@patient.Telephone</td>
+                        <td><a href="@($"/dossierPatient/{patient.Id}")">Dossier du patient</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No patients found.</p>
+    }
+}
+else
+{
+    <p>Vous devez être connecté en tant qu'organisateur ou praticien pour voir la liste des patients.</p>
+}

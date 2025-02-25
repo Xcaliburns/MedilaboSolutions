@@ -1,0 +1,57 @@
+﻿@page "/details/{id:int}"
+@using Frontend.Models
+@using Frontend.Services
+@inject DataService DataService
+@inject RedirectToLogin RedirectToLogin
+@inject NavigationManager Navigation
+
+<PageTitle>Patient Details</PageTitle>
+
+<h1>Détails du patient</h1>
+
+@if (!isAuthenticated)
+{
+    <p>Veuillez vous connecter pour accéder aux détails du patient.</p>
+    <button class="btn btn-primary" @onclick="NavigateToLogin">Se connecter</button>
+}
+else
+{
+    @if (patient == null)
+    {
+        <p><em>Pas de patient selectionné</em></p>
+    }
+    else
+    {
+        <div class="container">
+            <div class="mb-3">
+                <label class="form-label">Nom: </label>
+                <input class="form-control" @bind="patient.Nom" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Prénom: </label>
+                <input class="form-control" @bind="patient.Prenom" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Date de Naissance: </label>
+                <input type="date" class="form-control" @bind="patient.DateDeNaissance" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Genre: </label>
+                <input class="form-control" @bind="patient.Genre" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Adresse: </label>
+                <input class="form-control" @bind="patient.Adresse" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Téléphone: </label>
+                <input class="form-control" @bind="patient.Telephone" />
+            </div>
+            <button class="btn btn-success" @onclick="SaveChanges">Enregistrer</button>
+            @if (!string.IsNullOrEmpty(securityMessage))
+            {
+                <p class="text-danger">@securityMessage</p>
+            }
+        </div>
+    }
+}

@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using MedilaboSolutionsBack1.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MedilaboSolutionsBack1.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Organisateur,Praticien")]
     public class PatientController : ControllerBase
     {
         private readonly IPatientService _patientService;
@@ -40,8 +41,24 @@ namespace MedilaboSolutionsBack1.Controllers
             return Ok(patient);
         }
 
-        // POST: api/Patient/Edit/5
-        [HttpPost("Edit/{id}")]
+        // POST: api/Patient/Create
+        [HttpPost("Create")]
+        public ActionResult Create([FromBody] Patient patient)
+        {
+            try
+            {
+                // Add the patient to the database
+                _patientService.CreatePatient(patient);
+                return Ok(patient);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        // PUT: api/Patient/Edit/5   
+        [HttpPut("Edit/{id}")]
         public ActionResult Edit(int id, [FromBody] Patient updatedPatient)
         {
             try
@@ -77,27 +94,5 @@ namespace MedilaboSolutionsBack1.Controllers
                 return BadRequest();
             }
         }
-
-        //// DELETE: api/Patient/Delete/5
-        //[HttpDelete("{id}")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Delete(int id)
-        //{
-        //    try
-        //    {
-        //        var patient = _patientService.GetPatientById(id);
-        //        if (patient == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        _patientService.DeletePatient(id);
-        //        return NoContent();
-        //    }
-        //    catch
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
     }
 }
