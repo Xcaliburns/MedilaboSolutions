@@ -31,15 +31,12 @@ namespace FrontendRazor.Pages
             }
 
             Patient = await client.GetFromJsonAsync<Patient>($"patient/{id}");
-
-            // Ajoutez des journaux de débogage pour vérifier l'ID du patient
-            System.Diagnostics.Debug.WriteLine($"OnGetAsync - Patient ID: {Patient?.Id}");
+         
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var id = Patient.Id;         
-
+           
             if (!ModelState.IsValid)
             {
                 System.Diagnostics.Debug.WriteLine("ModelState is not valid");
@@ -54,19 +51,32 @@ namespace FrontendRazor.Pages
             {
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
+            else
+            {
+                return RedirectToLogin();
+            }
 
-            var response = await client.PutAsJsonAsync($"patient/edit/{id}", Patient);
+            var response = await client.PutAsJsonAsync($"patient/edit/{Patient.Id}", Patient);
 
             if (response.IsSuccessStatusCode)
             {
                 System.Diagnostics.Debug.WriteLine("Update successful");
                 return RedirectToPage("/Index");
             }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return RedirectToLogin();
+            }
 
             // Gérer les erreurs de mise à jour
             System.Diagnostics.Debug.WriteLine("Update failed");
             ModelState.AddModelError(string.Empty, "Erreur lors de la mise à jour des données du patient.");
             return Page();
+        }
+
+        private IActionResult RedirectToLogin()
+        {
+            return RedirectToPage("/Login");
         }
     }
 }
