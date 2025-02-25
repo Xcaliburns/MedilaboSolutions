@@ -18,7 +18,9 @@ namespace FrontendRazor.Pages
             _httpClientFactory = httpClientFactory;
         }
 
-        public List<Patient> Patients { get; set; }
+        public List<Patient> Patients { get; set; } = new List<Patient>();
+        public bool IsAuthenticated { get; private set; }
+        public bool IsAuthorized { get; private set; }
 
         public async Task OnGetAsync()
         {
@@ -31,7 +33,20 @@ namespace FrontendRazor.Pages
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
 
-            Patients = await client.GetFromJsonAsync<List<Patient>>("patient");
+            try
+            {
+                Patients = await client.GetFromJsonAsync<List<Patient>>("patient");
+            }
+            catch (HttpRequestException ex)
+            {
+                // Gérer les erreurs de requête HTTP
+                ModelState.AddModelError(string.Empty, "Une erreur s'est produite lors de la récupération des patients.");
+            }
+
+            // Définir les propriétés IsAuthenticated et IsAuthorized
+            var user = HttpContext.User;
+            IsAuthenticated = user.Identity.IsAuthenticated;
+            IsAuthorized = user.IsInRole("Organisateur") || user.IsInRole("Praticien");
         }
     }
 

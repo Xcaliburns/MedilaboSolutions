@@ -6,37 +6,44 @@
 
 <h2>Liste des patients</h2>
 
-@if (Model.Patients != null && Model.Patients.Any())
+@if (Model.IsAuthenticated && Model.IsAuthorized)
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Date de Naissance</th>
-                <th>Genre</th>
-                <th>Adresse</th>
-                <th>Téléphone</th>
-                <th>Détails</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var patient in Model.Patients)
-            {
+    if (Model.Patients != null && Model.Patients.Any())
+    {
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@patient.Nom</td>
-                    <td>@patient.Prenom</td>
-                    <td>@patient.DateDeNaissance.ToShortDateString()</td>
-                    <td>@patient.Genre</td>
-                    <td>@patient.Adresse</td>
-                    <td>@patient.Telephone</td>
-                    <td><a href="@($"/details/{patient.Id}")">Détails</a></td>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Date de Naissance</th>
+                    <th>Genre</th>
+                    <th>Adresse</th>
+                    <th>Téléphone</th>
+                    <th>Détails</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var patient in Model.Patients)
+                {
+                    <tr>
+                        <td>@patient.Nom</td>
+                        <td>@patient.Prenom</td>
+                        <td>@patient.DateDeNaissance.ToShortDateString()</td>
+                        <td>@patient.Genre</td>
+                        <td>@patient.Adresse</td>
+                        <td>@patient.Telephone</td>
+                        <td><a href="@($"/dossierPatient/{patient.Id}")">Dossier du patient</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No patients found.</p>
+    }
 }
 else
 {
-    <p>No patients found.</p>
+    <p>Vous devez être connecté en tant qu'organisateur ou praticien pour voir la liste des patients.</p>
 }
