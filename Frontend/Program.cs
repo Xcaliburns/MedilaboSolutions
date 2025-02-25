@@ -19,12 +19,14 @@ builder.Services.AddHttpClient("AuthenticatedClient", client =>
 {
     client.BaseAddress = new Uri("https://localhost:7214");
 });
-    //.AddHttpMessageHandler<AuthenticatedHttpClientHandler>();//supprimé pour changer les adresses
+
+// Configure default HttpClient
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("AuthenticatedClient"));
 
 builder.Services.AddOidcAuthentication(options =>
 {
     builder.Configuration.Bind("Local", options.ProviderOptions);
-    options.UserOptions.RoleClaim = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"; // Assurez-vous que le claim du rôle est correctement défini
+    options.UserOptions.RoleClaim = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
 });
 
 builder.Services.AddScoped<DataService>();

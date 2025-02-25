@@ -1,23 +1,25 @@
-﻿using Microsoft.JSInterop;
+﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.JSInterop;
 using System.Net.Http.Headers;
 
 namespace Frontend.Helpers
 {
     public class AuthenticatedHttpClientHandler : DelegatingHandler
     {
-        private readonly IJSRuntime _jsRuntime;
+        private readonly IAccessTokenProvider _tokenProvider;
 
-        public AuthenticatedHttpClientHandler(IJSRuntime jsRuntime)
+        public AuthenticatedHttpClientHandler(IAccessTokenProvider tokenProvider)
         {
-            _jsRuntime = jsRuntime;
+            _tokenProvider = tokenProvider;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
-            if (!string.IsNullOrEmpty(token))
+            var result = await _tokenProvider.RequestAccessToken();
+            if (result.TryGetToken(out var token))
             {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.Value);
             }
 
             return await base.SendAsync(request, cancellationToken);
