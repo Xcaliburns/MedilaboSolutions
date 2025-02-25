@@ -58,13 +58,12 @@
         }
       ],
       "UpstreamPathTemplate": "/patient/create",
-      "UpstreamHttpMethod": [ "Post" ],
+      "UpstreamHttpMethod": [ "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
     },
-
     {
       "DownstreamPathTemplate": "/api/Auth/login",
       "DownstreamScheme": "https",
@@ -88,7 +87,7 @@
       ],
       "UpstreamPathTemplate": "/auth/logout",
       "UpstreamHttpMethod": [ "POST" ]
-    }
+    }   
   ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:7214"

@@ -50,7 +50,8 @@ builder.Services.AddCors(options =>
         {
             builder.WithOrigins("https://localhost:7214")
                    .AllowAnyMethod()
-                   .AllowAnyHeader();
+                   .AllowAnyHeader()
+                   .AllowCredentials(); // Assurez-vous que les cookies sont autorisés
         });
 });
 

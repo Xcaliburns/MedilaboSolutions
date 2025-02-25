@@ -3,6 +3,7 @@ using Ocelot.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Gateway.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,28 +35,28 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtSettings["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
     };
+    options.EventsType = typeof(CustomJwtBearerEvents);
 });
 
-// Configure CORS
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowAllOrigins",
-//        builder =>
-//        {
-//            builder.AllowAnyOrigin()
-//                   .AllowAnyMethod()
-//                   .AllowAnyHeader();
-//        });
-//});
+builder.Services.AddScoped<CustomJwtBearerEvents>();
+
+builder.Services.AddHttpClient("AuthenticatedClient", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7214");
+}).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    UseCookies = true
+});
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
         builder =>
         {
-            builder.WithOrigins("https://localhost:7213", "https://localhost:7088")
+            builder.WithOrigins("https://localhost:7213", "https://localhost:7088", "https://localhost:7134")
                    .AllowAnyMethod()
-                   .AllowAnyHeader();
+                   .AllowAnyHeader()
+                   .AllowCredentials();
         });
 });
 
@@ -68,19 +69,30 @@ var app = builder.Build();
 // Configure the HTTP request pipeline
 app.UseHttpsRedirection();
 
-app.UseCors("AllowSpecificOrigins"); 
+app.UseCors("AllowSpecificOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Use Ocelot middleware
-await app.UseOcelot();
+// Middleware to log the presence of the authToken cookie
 app.Use(async (context, next) =>
 {
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    logger.LogInformation("Handling request: {Path}", context.Request.Path);
+    if (context.Request.Cookies.ContainsKey("authToken"))
+    {
+        var cookie = context.Request.Cookies["authToken"];
+        logger.LogInformation("authToken cookie is present in the request.");
+        logger.LogInformation($"authToken cookie value: {cookie}");
+    }
+    else
+    {
+        logger.LogInformation("authToken cookie is NOT present in the request.");
+    }
     await next.Invoke();
     logger.LogInformation("Finished handling request.");
 });
+
+// Use Ocelot middleware
+await app.UseOcelot();
 
 app.Run();

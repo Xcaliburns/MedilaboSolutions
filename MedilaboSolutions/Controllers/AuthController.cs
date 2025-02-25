@@ -15,12 +15,14 @@ namespace MedilaboSolutionsBack1.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IConfiguration configuration, ILogger<AuthController> logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpPost("login")]
@@ -42,7 +44,21 @@ namespace MedilaboSolutionsBack1.Controllers
             if (result.Succeeded)
             {
                 var token = GenerateJwtToken(user);
-                return Ok(new { Token = token });
+
+                // Configurez les options du cookie
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, // Assurez-vous que le cookie est sécurisé
+                    SameSite = SameSiteMode.Lax, // Utilisez Lax pour permettre les requêtes cross-site
+                    Expires = DateTime.UtcNow.AddHours(2) // Définissez l'expiration selon vos besoins
+                };
+
+                // Ajoutez le cookie à la réponse
+                HttpContext.Response.Cookies.Append("authToken", token, cookieOptions);
+
+                // Inclure le token dans la réponse
+                return Ok(new { Message = "Login successful", Token = token });
             }
 
             return Unauthorized();
@@ -69,6 +85,7 @@ namespace MedilaboSolutionsBack1.Controllers
 
             // Add roles to the claims
             var roles = _userManager.GetRolesAsync(user).Result;
+            _logger.LogInformation("Roles retrieved for user {UserName}: {Roles}", user.UserName, string.Join(", ", roles));
             claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
 
             var token = new JwtSecurityToken(
@@ -80,5 +97,6 @@ namespace MedilaboSolutionsBack1.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }
