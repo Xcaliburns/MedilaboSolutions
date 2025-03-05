@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PatientNotes.Models;
 using PatientNotes.Services;
 
@@ -9,6 +10,7 @@ namespace PatientNotes.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Praticien")]
     public class NoteController : ControllerBase
     {
         private readonly NotesService _notesService;
