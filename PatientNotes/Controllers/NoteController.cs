@@ -20,23 +20,23 @@ namespace PatientNotes.Controllers
             _notesService = notesService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Note>>> GetAsync()
-        {
-            var notes = await _notesService.GetAsync();
-            return notes;
-        }
+        //[HttpGet]
+        //public async Task<ActionResult<List<Note>>> GetAsync()
+        //{
+        //    var notes = await _notesService.GetAsync();
+        //    return notes;
+        //}
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Note>> GetAsync(string id)
-        {
-            var note = await _notesService.GetAsync(id);
-            if (note == null)
-            {
-                return new NotFoundResult();
-            }
-            return note;
-        }
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Note>> GetAsync(string id)
+        //{
+        //    var note = await _notesService.GetAsync(id);
+        //    if (note == null)
+        //    {
+        //        return new NotFoundResult();
+        //    }
+        //    return note;
+        //}
 
         [HttpGet("patient/{PatientId}")]
         public async Task<ActionResult<List<Note>>> GetByPatientId(int PatientId)
@@ -45,35 +45,35 @@ namespace PatientNotes.Controllers
             return notes;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Note>> CreateAsync(Note newNote)
-        {
-            await _notesService.CreateAsync(newNote);
-            return newNote;
-        }
+        //[HttpPost]
+        //public async Task<ActionResult<Note>> CreateAsync(Note newNote)
+        //{
+        //    await _notesService.CreateAsync(newNote);
+        //    return newNote;
+        //}
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Note>> UpdateAsync(string id, Note updatedNote)
-        {
-            var note = await _notesService.GetAsync(id);
-            if (note == null)
-            {
-                return new NotFoundResult();
-            }
-            await _notesService.UpdateAsync(id, updatedNote);
-            return updatedNote;
-        }
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult<Note>> UpdateAsync(string id, Note updatedNote)
+        //{
+        //    var note = await _notesService.GetAsync(id);
+        //    if (note == null)
+        //    {
+        //        return new NotFoundResult();
+        //    }
+        //    await _notesService.UpdateAsync(id, updatedNote);
+        //    return updatedNote;
+        //}
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> RemoveAsync(string id)
-        {
-            var note = await _notesService.GetAsync(id);
-            if (note == null)
-            {
-                return new NotFoundResult();
-            }
-            await _notesService.RemoveAsync(id);
-            return new OkResult();
-        }
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult> RemoveAsync(string id)
+        //{
+        //    var note = await _notesService.GetAsync(id);
+        //    if (note == null)
+        //    {
+        //        return new NotFoundResult();
+        //    }
+        //    await _notesService.RemoveAsync(id);
+        //    return new OkResult();
+        //}
     }
 }

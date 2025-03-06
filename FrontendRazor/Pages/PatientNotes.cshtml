@@ -1,0 +1,16 @@
+﻿@page "{id:int}"
+@model FrontendRazor.Pages.PatientNotesModel
+@{
+    ViewData["Title"] = "NotesPatient";
+}
+
+<h2>Notes du patient</h2>
+
+<div>
+    @foreach (var note in Model.Notes)
+    {
+        <p>Patient ID: @note.PatientId</p>
+        <p>Note: @note.PatientNote</p>
+        <hr />
+    }
+</div>
