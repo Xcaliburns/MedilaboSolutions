@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PatientNotes.Data;
+using PatientNotes.Interfaces;
 using PatientNotes.Models;
+using PatientNotes.Repository;
 using PatientNotes.Services;
 using System.Text;
 
@@ -22,7 +24,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 builder.Services.Configure<PatientNotesDatabaseSettings>(
     builder.Configuration.GetSection("MedilaboNotesData"));
 
-builder.Services.AddSingleton<NotesService>();
+//builder.Services.AddSingleton<NotesService>();
+builder.Services.AddScoped<INotesService, NotesService>();
+builder.Services.AddScoped<INotesRepository, NotesRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
