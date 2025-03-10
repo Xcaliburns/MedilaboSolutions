@@ -47,14 +47,6 @@ namespace FrontendRazor.Pages
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
 
-            if (!ModelState.IsValid)
-            {
-                // Reload the patient data and notes if the model state is invalid
-                Patient = await client.GetFromJsonAsync<Patient>($"patient/{newNote.PatientId}");
-                Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{newNote.PatientId}");
-                return Page();
-            }
-
             var response = await client.PostAsJsonAsync("/api/note", newNote);
             if (response.IsSuccessStatusCode)
             {
@@ -64,21 +56,20 @@ namespace FrontendRazor.Pages
                     Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{createdNote.PatientId}");
                 }
 
-                // Reset the newNote object
+                // Réinitialisez l'objet côté serveur
                 this.newNote = new NoteRequest();
+                ModelState.Clear(); // Nettoyez l'état du modèle
 
-                // Reload the page to apply the changes
-                return RedirectToPage();
+                return Page();
             }
             else
             {
                 ModelState.AddModelError(string.Empty, "An error occurred while adding the note.");
-                // Reload the patient data and notes if there is an error
-                Patient = await client.GetFromJsonAsync<Patient>($"patient/{newNote.PatientId}");
-                Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{newNote.PatientId}");
                 return Page();
             }
         }
+
+
 
 
 
