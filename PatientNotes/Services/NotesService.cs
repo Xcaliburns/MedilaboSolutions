@@ -1,41 +1,35 @@
 using PatientNotes.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using PatientNotes.Interfaces;
 
 namespace PatientNotes.Services;
 
-public class NotesService
+public class NotesService : INotesService
 {
-    private readonly IMongoCollection<Note> _notesCollection;
+    private readonly INotesRepository _notesRepository;
 
-    public NotesService(
-        IOptions<PatientNotesDatabaseSettings> patientNotesDatabaseSettings)
+    public NotesService(INotesRepository notesRepository)
     {
-        var mongoClient = new MongoClient(
-            patientNotesDatabaseSettings.Value.ConnectionString);
-
-        var mongoDatabase = mongoClient.GetDatabase(
-            patientNotesDatabaseSettings.Value.DatabaseName);
-
-        _notesCollection = mongoDatabase.GetCollection<Note>(
-            patientNotesDatabaseSettings.Value.CollectionName);
+        _notesRepository = notesRepository;
     }
 
+    //toutes les notes
     public async Task<List<Note>> GetAsync() =>
-        await _notesCollection.Find(_ => true).ToListAsync();
-
+        await _notesRepository.GetAsync();
+    // une note
     public async Task<Note> GetAsync(string id) =>
-        await _notesCollection.Find(x => x._id == id).FirstOrDefaultAsync();
-
+        await _notesRepository.GetAsync(id);
+    // les notes d'un patient
     public async Task<List<Note>> GetByPatientId(int patientId) =>
-        await _notesCollection.Find(x => x.PatientId == patientId).ToListAsync();
-
+        await _notesRepository.GetByPatientId(patientId);
+    // ajouter une note
     public async Task CreateAsync(Note newNote) =>
-        await _notesCollection.InsertOneAsync(newNote);
-
+        await _notesRepository.CreateAsync(newNote);
+    // modifier une note
     public async Task UpdateAsync(string id, Note updatedNote) =>
-        await _notesCollection.ReplaceOneAsync(x => x._id == id, updatedNote);
-
+        await _notesRepository.UpdateAsync(id, updatedNote);
+    // supprimer une note
     public async Task RemoveAsync(string id) =>
-        await _notesCollection.DeleteOneAsync(x => x._id == id);
+        await _notesRepository.RemoveAsync(id);
 }

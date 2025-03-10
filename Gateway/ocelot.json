@@ -135,23 +135,40 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
-    
+    },
+    {
+      "DownstreamPathTemplate": "/api/note",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7164
+        }
+      ],
+      "UpstreamPathTemplate": "/api/note",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+
+
       //,
-    //{
-    //  "DownstreamPathTemplate": "/api/Note",
-    //  "DownstreamScheme": "https",
-    //  "DownstreamHostAndPorts": [
-    //    {
-    //      "Host": "localhost",
-    //      "Port": 7088
-    //    }
-    //  ],
-    //  "UpstreamPathTemplate": "/api/note",
-    //  "UpstreamHttpMethod": [ "POST" ],
-    //  "AuthenticationOptions": {
-    //    "AuthenticationProviderKey": "Bearer",
-    //    "AllowedScopes": []
-    //  }
+      //{
+      //  "DownstreamPathTemplate": "/api/Note",
+      //  "DownstreamScheme": "https",
+      //  "DownstreamHostAndPorts": [
+      //    {
+      //      "Host": "localhost",
+      //      "Port": 7088
+      //    }
+      //  ],
+      //  "UpstreamPathTemplate": "/api/note",
+      //  "UpstreamHttpMethod": [ "POST" ],
+      //  "AuthenticationOptions": {
+      //    "AuthenticationProviderKey": "Bearer",
+      //    "AllowedScopes": []
+      //  }
     }
   ],
   "GlobalConfiguration": {

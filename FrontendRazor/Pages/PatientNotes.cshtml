@@ -7,10 +7,30 @@
 <h2>Notes du patient</h2>
 
 <div>
+    Patient:
+    <p>Patient ID: @Model.Patient.Id</p>
+    <p>Nom: @Model.Patient.Nom</p>
+    <p>Prenom: @Model.Patient.Prenom</p>
+    <p>Date de naissance: @Model.Patient.DateDeNaissance</p>
+</div>
+
+<div>
     @foreach (var note in Model.Notes)
     {
         <p>Patient ID: @note.PatientId</p>
         <p>Note: @note.PatientNote</p>
         <hr />
     }
+</div>
+
+<div>
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="newNote.PatientNote"></label>
+            <input asp-for="newNote.PatientNote" class="form-control" />
+            <span asp-validation-for="newNote.PatientNote" class="text-danger"></span>
+        </div>
+        <input type="hidden" asp-for="newNote.PatientId" value="@Model.Patient.Id" />
+        <button type="submit" class="btn btn-primary">Add Note</button>
+    </form>
 </div>
