@@ -16,10 +16,8 @@
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Date de Naissance</th>
-                    <th>Genre</th>
-                    <th>Adresse</th>
-                    <th>Téléphone</th>
-                    <th>Détails</th>
+                    <th>Sexe</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -30,9 +28,19 @@
                         <td>@patient.Prenom</td>
                         <td>@patient.DateDeNaissance.ToShortDateString()</td>
                         <td>@patient.Genre</td>
-                        <td>@patient.Adresse</td>
-                        <td>@patient.Telephone</td>
-                        <td><a href="@($"/dossierPatient/{patient.Id}")">Dossier du patient</a></td>
+                        <td class="col">
+                            <div class="d-flex ">
+                            <form method="post" asp-page-handler="RedirectToDonneesPatient" class=" me-2">
+                                <input type="hidden" name="patientId" value="@patient.Id" />
+                                <button type="submit" class="btn btn-update">Mise à jour</button>
+                            </form>                       
+                       
+                            <form method="post" asp-page-handler="RedirectToPatientNotes">
+                                <input type="hidden" name="patientId" value="@patient.Id" />
+                                <button type="submit" class="btn btn-notes">Notes du patient</button>
+                            </form>
+                            </div>
+                        </td>                       
                     </tr>
                 }
             </tbody>

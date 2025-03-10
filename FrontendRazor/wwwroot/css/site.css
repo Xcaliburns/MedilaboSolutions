@@ -51,4 +51,26 @@ body {
         background-color: #e2e6ea;
     }
 
+.btn-update {
+    background-color: #007bff; /* Couleur bleue pour le bouton de mise à jour */
+    color: white;
+}
 
+.btn-notes {
+    background-color: #28a745; /* Couleur verte pour le bouton des notes */
+    color: white;
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.note-container {
+    max-width:800px;
+    margin:auto;
+}

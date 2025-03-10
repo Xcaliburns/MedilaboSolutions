@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FrontendRazor.Pages
 {
@@ -47,6 +48,16 @@ namespace FrontendRazor.Pages
             var user = HttpContext.User;
             IsAuthenticated = user.Identity.IsAuthenticated;
             IsAuthorized = user.IsInRole("Organisateur") || user.IsInRole("Praticien");
+        }
+
+        public IActionResult OnPostRedirectToDonneesPatient(int patientId)
+        {
+            return RedirectToPage("/DonneesPatient", new { id = patientId });
+        }
+
+        public IActionResult OnPostRedirectToPatientNotes(int patientId)
+        {
+            return RedirectToPage("/PatientNotes", new { id = patientId });
         }
     }
 

@@ -21,12 +21,13 @@ namespace FrontendRazor.Models
 
         [Required(ErrorMessage = "Le champ Genre est requis.")]
         [StringLength(50)]
+        [RegularExpression("^(H|F)$", ErrorMessage = "Le champ Genre doit être 'H' pour Homme ou 'F' pour Femme.")]
         public string Genre { get; set; }
 
         [StringLength(50)]
-        public string? Adresse { get; set; } 
+        public string? Adresse { get; set; }
 
         [StringLength(50)]
-        public string? Telephone { get; set; } 
+        public string? Telephone { get; set; }
     }
 }

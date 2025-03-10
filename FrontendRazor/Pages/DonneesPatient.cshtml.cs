@@ -7,11 +7,11 @@ namespace FrontendRazor.Pages
 {
 
     [Authorize(Roles = "Organisateur, Praticien")]
-    public class DossierPatientModel : PageModel
+    public class DonneesPatientModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public DossierPatientModel(IHttpClientFactory httpClientFactory)
+        public DonneesPatientModel(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }

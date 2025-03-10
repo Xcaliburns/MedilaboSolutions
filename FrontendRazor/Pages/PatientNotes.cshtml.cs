@@ -41,30 +41,50 @@ namespace FrontendRazor.Pages
         public async Task<IActionResult> OnPostAsync(NoteRequest newNote)
         {
             var client = _httpClientFactory.CreateClient("GatewayClient");
-            // Récupérer le jeton d'authentification à partir des cookies
             var authToken = HttpContext.Request.Cookies["authToken"];
             if (!string.IsNullOrEmpty(authToken))
             {
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
-            // ajouter une nouvelle note
+
+            if (!ModelState.IsValid)
+            {
+                // Reload the patient data and notes if the model state is invalid
+                Patient = await client.GetFromJsonAsync<Patient>($"patient/{newNote.PatientId}");
+                Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{newNote.PatientId}");
+                return Page();
+            }
+
             var response = await client.PostAsJsonAsync("/api/note", newNote);
             if (response.IsSuccessStatusCode)
             {
-                // Lire la réponse pour récupérer l'ID de la nouvelle note
                 var createdNote = await response.Content.ReadFromJsonAsync<NoteRequest>();
                 if (createdNote != null)
                 {
-                    // Mettre à jour la liste des notes
                     Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{createdNote.PatientId}");
                 }
-                return Page();
+
+                // Reset the newNote object
+                this.newNote = new NoteRequest();
+
+                // Reload the page to apply the changes
+                return RedirectToPage();
             }
             else
             {
                 ModelState.AddModelError(string.Empty, "An error occurred while adding the note.");
+                // Reload the patient data and notes if there is an error
+                Patient = await client.GetFromJsonAsync<Patient>($"patient/{newNote.PatientId}");
+                Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{newNote.PatientId}");
                 return Page();
             }
+        }
+
+
+
+        public IActionResult OnPostRedirectToDonneesPatient(int patientId)
+        {
+            return RedirectToPage("/DonneesPatient", new { id = patientId });
         }
     }
 }
