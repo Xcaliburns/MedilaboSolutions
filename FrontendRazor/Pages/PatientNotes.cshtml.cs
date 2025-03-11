@@ -42,22 +42,20 @@ namespace FrontendRazor.Pages
         {
             var client = _httpClientFactory.CreateClient("GatewayClient");
             var authToken = HttpContext.Request.Cookies["authToken"];
+
             if (!string.IsNullOrEmpty(authToken))
-            {
+            { 
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
-
-            if (!ModelState.IsValid)
-            {
-                // Recharger les données du patient en cas d'erreur de validation
-                await OnGetAsync(newNote.PatientId);
-                return Page();
-            }
-
             var response = await client.PostAsJsonAsync("/api/note", newNote);
             if (response.IsSuccessStatusCode)
             {
                 var createdNote = await response.Content.ReadFromJsonAsync<NoteRequest>();
+                if (createdNote == null)
+                {
+                    // recharger les données du patient
+
+                }
                 if (createdNote != null)
                 {
                     Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{createdNote.PatientId}");
@@ -75,7 +73,6 @@ namespace FrontendRazor.Pages
             else
             {
                 ModelState.AddModelError(string.Empty, "An error occurred while adding the note.");
-                // Recharger les données du patient en cas d'erreur de requête
                 await OnGetAsync(newNote.PatientId);
                 return Page();
             }
