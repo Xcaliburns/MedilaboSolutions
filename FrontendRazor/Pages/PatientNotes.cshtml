@@ -30,7 +30,6 @@
         @foreach (var note in Model.Notes)
         {
             <div class="note">
-                
                 <pre>@note.PatientNote</pre>
                 <form method="post" asp-page-handler="Delete">
                     <input type="hidden" name="noteId" value="@note._id" />
@@ -47,7 +46,7 @@
     <!-- Section pour ajouter une nouvelle note -->
     <div class="add-note">
         <h3>Ajouter une nouvelle note</h3>
-        <form method="post">
+        <form method="post" asp-page-handler="AddNote">
             <div class="form-group">
                 @* <label asp-for="newNote.PatientNote"></label> *@
                 <textarea asp-for="newNote.PatientNote" class="form-control" rows="5"></textarea>

@@ -38,7 +38,7 @@ namespace FrontendRazor.Pages
             Patient = await client.GetFromJsonAsync<Patient>($"patient/{id}");
         }
 
-        public async Task<IActionResult> OnPostAsync(NoteRequest newNote)
+        public async Task<IActionResult> OnPostAddNoteAsync(NoteRequest newNote) //Attention à ne pas mettre un nom comme OnOstAsync, cela peut creer des ambiguités
         {
             var client = _httpClientFactory.CreateClient("GatewayClient");
             var authToken = HttpContext.Request.Cookies["authToken"];
@@ -90,7 +90,7 @@ namespace FrontendRazor.Pages
             var response = await client.DeleteAsync($"/api/note/{noteId}");
             if (response.IsSuccessStatusCode)
             {
-                Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{patientId}");
+               // Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{patientId}");
 
                 // Recharger les données du patient
                 await OnGetAsync(patientId);
