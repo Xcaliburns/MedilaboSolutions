@@ -102,7 +102,7 @@ namespace FrontendRazor.Pages
                 ModelState.AddModelError(string.Empty, "An error occurred while deleting the note.");
                 return Page();
             }
-        }
+        }     
 
 
         public IActionResult OnPostRedirectToDonneesPatient(int patientId)

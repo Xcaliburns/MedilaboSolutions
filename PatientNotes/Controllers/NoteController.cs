@@ -64,17 +64,17 @@ namespace PatientNotes.Controllers
             return newNote;
         }
 
-        //[HttpPut("{id}")]
-        //public async Task<ActionResult<Note>> UpdateAsync(string id, Note updatedNote)
-        //{
-        //    var note = await _notesService.GetAsync(id);
-        //    if (note == null)
-        //    {
-        //        return new NotFoundResult();
-        //    }
-        //    await _notesService.UpdateAsync(id, updatedNote);
-        //    return updatedNote;
-        //}
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Note>> UpdateAsync(string id, Note updatedNote)
+        {
+            var note = await _notesService.GetAsync(id);
+            if (note == null)
+            {
+                return new NotFoundResult();
+            }
+            await _notesService.UpdateAsync(id, updatedNote);
+            return updatedNote;
+        }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> RemoveAsync(string id)

@@ -29,7 +29,7 @@
         <h3>Historique des Notes</h3>
         @foreach (var note in Model.Notes)
         {
-            <div class="note">
+            <div class="note mt-3">
                 <pre>@note.PatientNote</pre>
                 <form method="post" asp-page-handler="Delete">
                     <input type="hidden" name="noteId" value="@note._id" />
