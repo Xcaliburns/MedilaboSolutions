@@ -76,16 +76,16 @@ namespace PatientNotes.Controllers
         //    return updatedNote;
         //}
 
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult> RemoveAsync(string id)
-        //{
-        //    var note = await _notesService.GetAsync(id);
-        //    if (note == null)
-        //    {
-        //        return new NotFoundResult();
-        //    }
-        //    await _notesService.RemoveAsync(id);
-        //    return new OkResult();
-        //}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> RemoveAsync(string id)
+        {
+            var note = await _notesService.GetAsync(id);
+            if (note == null)
+            {
+                return new NotFoundResult();
+            }
+            await _notesService.RemoveAsync(id);
+            return new OkResult();
+        }
     }
 }

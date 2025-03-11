@@ -47,6 +47,13 @@ namespace FrontendRazor.Pages
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
 
+            if (!ModelState.IsValid)
+            {
+                // Recharger les données du patient en cas d'erreur de validation
+                await OnGetAsync(newNote.PatientId);
+                return Page();
+            }
+
             var response = await client.PostAsJsonAsync("/api/note", newNote);
             if (response.IsSuccessStatusCode)
             {
@@ -56,21 +63,49 @@ namespace FrontendRazor.Pages
                     Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{createdNote.PatientId}");
                 }
 
-                // Réinitialisez l'objet côté serveur
+                // Réinitialiser l'objet côté serveur
                 this.newNote = new NoteRequest();
-                ModelState.Clear(); // Nettoyez l'état du modèle
+                ModelState.Clear(); // Nettoyer l'état du modèle
+
+                // Recharger les données du patient
+                await OnGetAsync(newNote.PatientId);
 
                 return Page();
             }
             else
             {
                 ModelState.AddModelError(string.Empty, "An error occurred while adding the note.");
+                // Recharger les données du patient en cas d'erreur de requête
+                await OnGetAsync(newNote.PatientId);
                 return Page();
             }
         }
 
+        public async Task<IActionResult> OnPostDeleteAsync(string noteId, int patientId)
+        {
+            var client = _httpClientFactory.CreateClient("GatewayClient");
+            var authToken = HttpContext.Request.Cookies["authToken"];
+            if (!string.IsNullOrEmpty(authToken))
+            {
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+            }
 
+            var response = await client.DeleteAsync($"/api/note/{noteId}");
+            if (response.IsSuccessStatusCode)
+            {
+                Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{patientId}");
 
+                // Recharger les données du patient
+                await OnGetAsync(patientId);
+
+                return Page();
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "An error occurred while deleting the note.");
+                return Page();
+            }
+        }
 
 
         public IActionResult OnPostRedirectToDonneesPatient(int patientId)
