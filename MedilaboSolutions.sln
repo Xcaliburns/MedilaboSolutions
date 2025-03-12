@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontendRazor", "FrontendRa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientNotes", "PatientNotes\PatientNotes.csproj", "{B7D6ADB0-C2A4-4D4C-99C3-8D288686634E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiabeteRiskReportService", "DiabeteRiskReportService\DiabeteRiskReportService.csproj", "{8F443D41-4CD6-4CDC-A797-A98EC93F17A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{B7D6ADB0-C2A4-4D4C-99C3-8D288686634E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7D6ADB0-C2A4-4D4C-99C3-8D288686634E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7D6ADB0-C2A4-4D4C-99C3-8D288686634E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F443D41-4CD6-4CDC-A797-A98EC93F17A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F443D41-4CD6-4CDC-A797-A98EC93F17A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F443D41-4CD6-4CDC-A797-A98EC93F17A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F443D41-4CD6-4CDC-A797-A98EC93F17A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
