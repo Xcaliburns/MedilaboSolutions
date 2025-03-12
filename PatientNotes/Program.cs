@@ -24,7 +24,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 builder.Services.Configure<PatientNotesDatabaseSettings>(
     builder.Configuration.GetSection("MedilaboNotesData"));
 
-//builder.Services.AddSingleton<NotesService>();
+
 builder.Services.AddScoped<INotesService, NotesService>();
 builder.Services.AddScoped<INotesRepository, NotesRepository>();
 
