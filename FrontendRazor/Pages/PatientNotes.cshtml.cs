@@ -117,7 +117,7 @@ namespace FrontendRazor.Pages
 
         public async Task<RiskLevelResponse> GetPatientRiskLevelAsync(int patientId)
         {
-           var client = _httpClientFactory.CreateClient("GatewayClient");
+            var client = _httpClientFactory.CreateClient("GatewayClient");
             var authToken = HttpContext.Request.Cookies["authToken"];
             if (!string.IsNullOrEmpty(authToken))
             {
@@ -134,7 +134,17 @@ namespace FrontendRazor.Pages
             {
                 try
                 {
-                    return JsonSerializer.Deserialize<RiskLevelResponse>(responseContent);
+                    var riskLevelResponse = JsonSerializer.Deserialize<RiskLevelResponse>(responseContent);
+                    if (riskLevelResponse != null)
+                    {
+                        return riskLevelResponse;
+                    }
+                    else
+                    {
+                        // Log the null response
+                        Console.WriteLine("Deserialization returned null.");
+                        return new RiskLevelResponse { RiskLevel = "Error parsing risk level response" };
+                    }
                 }
                 catch (JsonException ex)
                 {

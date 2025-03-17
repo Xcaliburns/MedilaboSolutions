@@ -40,5 +40,23 @@ namespace DiabeteRiskReportService.Repository
             }
             return null;
         }
+
+        public async Task<List<PatientNote>> GetPatientNotes(int patientId, string authToken)
+        {
+            if (!string.IsNullOrEmpty(authToken))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+            }
+
+            var response = await _httpClient.GetAsync($"/note/patient/{patientId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                // Log or inspect the JSON content here
+                Console.WriteLine(json); // Or use any logging mechanism
+                return JsonSerializer.Deserialize<List<PatientNote>>(json);
+            }
+            return null;
+        }
     }
 }
