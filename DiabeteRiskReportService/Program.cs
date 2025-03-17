@@ -1,3 +1,6 @@
+using DiabeteRiskReportService.Interfaces;
+using DiabeteRiskReportService.Repository;
+using DiabeteRiskReportService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddScoped<IDiabeteReportService, DiabeteReportService>();
+builder.Services.AddScoped<IDiabeteReportRepository, DiabeteReportRepository>();
+
 
 // Configure DbContext with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
