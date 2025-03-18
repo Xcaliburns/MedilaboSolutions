@@ -1,6 +1,9 @@
 ﻿using DiabeteRiskReportService.Interfaces;
 using DiabeteRiskReportService.Models;
+using System.Drawing;
 using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Reflection.Metadata.BlobBuilder;
 
 
 namespace DiabeteRiskReportService.Services
@@ -80,27 +83,46 @@ namespace DiabeteRiskReportService.Services
                 int age = DateTime.Now.Year - patient.DateDeNaissance.Year;
                 string genre = patient.Genre;
 
-                if (triggerNumber >= 3)
-                {
-                    riskLevel = "Early Onset";
-                }
-                else if (triggerNumber == 2)
-                {
-                    riskLevel = "In Danger";
-                }
-                else if (triggerNumber == 1)
-                {
-                    riskLevel = "Borderline";
-                }
-                else if (age < 30 && genre == "M")
-                {
-                    riskLevel = "In Danger";
-                }
-                else if (age > 30 && genre == "F")
-                {
-                    riskLevel = "Borderline";
-                }
 
+                if (age > 0)
+                {
+                    //Borderline:Le dossier du patient contient entre deux et cinq déclencheurs et le patient est âgé de plus de 30 ans
+                    if (triggerNumber >= 2 && triggerNumber <= 5 && age > 30)
+                    {
+                        riskLevel = "Borderline";
+                    }
+                    //In Danger:Si le patient est un homme de moins de 30 ans, alors trois termes déclencheurs doivent être présents
+                    else if (genre == "H" && age <= 30 && triggerNumber >= 3)
+                    {
+                        riskLevel = "In Danger";
+                    }
+                    //In Danger:  Si le patient est une femme et a moins de 30 ans, il faudra quatre termes déclencheurs
+                    else if (genre == "F" && age <= 30 && triggerNumber >= 4 && triggerNumber < 7)
+                    {
+                        riskLevel = "In Danger";
+                    }
+                    //In Danger:  Si le patient a plus de 30 ans, alors il en faudra six ou sept;
+                    else if (age > 30 && triggerNumber >= 6 && triggerNumber <= 7)
+                    {
+                        riskLevel = "In Danger";
+                    }
+                    //Early Onset:  Si le patient est un homme de moins de 30 ans, alors au moins cinq termes déclencheurs sont nécessaires. 
+                    else if (genre == "H" && age <= 30 && triggerNumber >= 5)
+                    {
+                        riskLevel = "Early Onset";
+                    }
+                    //Early Onset:   Si le patient est une femme et a moins de 30 ans, il faudra au moins sept termes déclencheurs
+                    else if (genre == "F" && age <= 30 && triggerNumber >= 7)
+                    {
+                        riskLevel = "Early Onset";
+                    }
+                    //Early Onset: Si le patient a plus de 30 ans, alors il en faudra huit ou plus.
+                    else if (age > 30 && triggerNumber >= 8)
+                    {
+                        riskLevel = "Early Onset";
+                    }
+
+                }
                 return riskLevel;
             }
             return riskLevel;
