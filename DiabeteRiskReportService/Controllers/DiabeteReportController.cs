@@ -1,10 +1,12 @@
 ﻿using DiabeteRiskReportService.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiabeteRiskReportService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Praticien")]
     public class DiabeteReportController : ControllerBase
     {
         private readonly IDiabeteReportService _diabeteReportService;
