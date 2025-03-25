@@ -109,8 +109,10 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<ApplicationDbContext>();
     var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    DbInitializer.Initialize(context);
-    await IdentityInitializer.Initialize(userManager, roleManager);
+    // Applique les migrations avant d'initialiser la base
+   // context.Database.Migrate();
+   // DbInitializer.Initialize(context);
+   // await IdentityInitializer.Initialize(userManager, roleManager);
 }
 
 // Configure the HTTP request pipeline.

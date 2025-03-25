@@ -6,6 +6,9 @@ namespace MedilaboSolutionsBack1.Data
     {
         public static void Initialize(ApplicationDbContext context)
         {
+            // Assure que la base de données est créée
+            context.Database.EnsureCreated();
+
             // Vérifie si la table Patients contient des données
             if (context.Patients.Any())
             {

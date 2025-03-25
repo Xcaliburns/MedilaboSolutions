@@ -1,0 +1,39 @@
+services:
+
+#sqlserverDb 
+ sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      - SA_PASSWORD=UnBonMotDePasse123!
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+    networks:
+      - reseau
+
+#mongoDB
+ mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - reseau
+
+#Gateway
+#PatientService
+#PatientNotes
+#DiabeteRiskReportService
+#FrontendRazor
+
+networks:
+  reseau:
+
+volumes:
+  sql_data:
+  mongo_data:
