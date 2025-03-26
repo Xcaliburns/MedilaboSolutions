@@ -12,10 +12,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["MedilaboSolutions/PatientService.csproj", "MedilaboSolutions/"]
-RUN dotnet restore "./MedilaboSolutions/PatientService.csproj"
+COPY ["MedilaboSolutions/PatientService/PatientService.csproj", "MedilaboSolutions/PatientService/"]
+RUN dotnet restore "MedilaboSolutions/PatientService/PatientService.csproj"
 COPY . .
-WORKDIR "/src/MedilaboSolutions"
+WORKDIR "/src/MedilaboSolutions/PatientService"
 RUN dotnet build "./PatientService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage

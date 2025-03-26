@@ -27,9 +27,41 @@ services:
 
 #Gateway
 #PatientService
+ patientservice:
+    build:
+      context: .
+      dockerfile: PatientService/Dockerfile
+    container_name: patientservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=PatientDb;User Id=sa;Password=UnBonMotDePasse123!
+      - JwtSettings__Issuer=YourIssuer
+      - JwtSettings__Audience=YourAudience
+      - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
+    ports:
+      - "8000:80"
+      - "8001:443"
+    networks:
+      - reseau
+    depends_on:
+      - sqlserver
+
 #PatientNotes
 #DiabeteRiskReportService
 #FrontendRazor
+ frontendrazor:
+    build:
+      context: .
+      dockerfile: FrontendRazor/Dockerfile
+    container_name: frontendrazor
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "8002:80"
+    networks:
+      - reseau
+    depends_on:
+      - sqlserver
 
 networks:
   reseau:
