@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  patientservice:
+    image: patientservice:latest
+    build:
+      context: .
+      dockerfile: MedilaboSolutions/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  patientnotes:
+    image: patientnotes:latest
+    build:
+      context: .
+      dockerfile: PatientNotes/Dockerfile
+    ports:
+      - "8090:8090"
+      - "8091:8091"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  
+
+  gateway:
+     image: gateway:latest
+     build:
+        context: .
+        dockerfile: Gateway/Dockerfile
+     ports:
+      - "5000:5000"
+      - "5001:5001"
+     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+     depends_on:
+      - patientservice
+      - patientnotes
+
+  diabeteriskreportservice:
+    image: diabeteriskreportservice:latest
+    build:
+      context: .
+      dockerfile: DiabeteRiskReportService/Dockerfile
+    ports:
+      - "5020:5020"
+      - "5021:5021"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - gateway
+
+  frontendrazor:
+    image: frontendrazor:latest
+    build:
+      context: .
+      dockerfile: FrontendRazor/Dockerfile
+    ports:
+      - "5010:5010"
+      - "5011:5011"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - gateway
