@@ -1,13 +1,12 @@
 {
   "Routes": [
     {
-      // Route configuration for accessing a specific patient by ID
       "DownstreamPathTemplate": "/api/Patient/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7088
+          "Port": 8081
         }
       ],
       "UpstreamPathTemplate": "/patient/{id}",
@@ -18,13 +17,12 @@
       }
     },
     {
-      // Route configuration for accessing all patients or creating a new patient
       "DownstreamPathTemplate": "/api/Patient",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7088
+          "Port": 8081
         }
       ],
       "UpstreamPathTemplate": "/patient",
@@ -35,73 +33,12 @@
       }
     },
     {
-      // Route configuration for editing a specific patient by ID
-      "DownstreamPathTemplate": "/api/Patient/Edit/{id}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7088
-        }
-      ],
-      "UpstreamPathTemplate": "/patient/edit/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
-    },
-    {
-      // Route configuration for creating a new patient
-      "DownstreamPathTemplate": "/api/Create",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7088
-        }
-      ],
-      "UpstreamPathTemplate": "/patient/create",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
-    },
-    {
-      // Route configuration for user login
-      "DownstreamPathTemplate": "/api/Auth/login",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7088
-        }
-      ],
-      "UpstreamPathTemplate": "/auth/login",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      // Route configuration for user logout
-      "DownstreamPathTemplate": "/api/Auth/logout",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7088
-        }
-      ],
-      "UpstreamPathTemplate": "/auth/logout",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      // Route configuration for accessing all notes
       "DownstreamPathTemplate": "/api/Note",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7164
+          "Port": 8091
         }
       ],
       "UpstreamPathTemplate": "/api/note",
@@ -112,13 +49,12 @@
       }
     },
     {
-      // Route configuration for accessing, updating, or deleting a specific note by ID
       "DownstreamPathTemplate": "/api/Note/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7164
+          "Port": 8091
         }
       ],
       "UpstreamPathTemplate": "/api/note/{id}",
@@ -129,48 +65,12 @@
       }
     },
     {
-      // Route configuration for accessing notes by patient ID
-      "DownstreamPathTemplate": "/api/Note/patient/{PatientId}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7164
-        }
-      ],
-      "UpstreamPathTemplate": "/note/patient/{PatientId}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
-    },
-    {
-      // Route configuration for creating a new note
-      "DownstreamPathTemplate": "/api/note",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7164
-        }
-      ],
-      "UpstreamPathTemplate": "/api/note",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
-    },
-
-    //Route configuration for risk report
-    {
       "DownstreamPathTemplate": "/api/DiabeteReport/Report/{patientId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7182
+          "Port": 5021
         }
       ],
       "UpstreamPathTemplate": "/report/{patientId}",
@@ -182,7 +82,6 @@
     }
   ],
   "GlobalConfiguration": {
-    // Base URL for the gateway
-    "BaseUrl": "https://localhost:7214"
+    "BaseUrl": "https://localhost:5001"
   }
 }

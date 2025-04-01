@@ -1,10 +1,7 @@
 using FrontendRazor.Data;
-
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,27 +16,30 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 
-// Configure HttpClient to use the Ocelot Gateway URL
+//  **Correction du HttpClient pour utiliser le Gateway sur 5001**
 builder.Services.AddHttpClient("GatewayClient", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7214/");
+    client.BaseAddress = new Uri("https://localhost:5001/");
 });
 
 builder.Services.AddHttpClient("PatientService", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7088");
+    client.BaseAddress = new Uri("https://localhost:8081"); //  Correction du port mais celui ci ne doit etre supprimé, il passe outre le Gateway
 });
 
-// Configure CORS
+// **Mise à jour de la configuration CORS**
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
         builder =>
         {
-            builder.WithOrigins("https://localhost:7134")
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowCredentials();
+            builder.WithOrigins(
+                "https://localhost:5001",  // Gateway HTTPS
+                "http://localhost:5000"  // Gateway HTTP               
+            )
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
         });
 });
 
@@ -51,8 +51,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/logout";
         options.AccessDeniedPath = "/login";
     });
-
-
 
 var app = builder.Build();
 
@@ -69,14 +67,10 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseCors("AllowSpecificOrigins");
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapRazorPages();
 
 app.Run();

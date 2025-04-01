@@ -48,7 +48,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigins",
         builder =>
         {
-            builder.WithOrigins("https://localhost:7214")
+            builder.WithOrigins(
+                "https://localhost:5001",  // Gateway HTTPS
+                "http://localhost:5000")  // Gateway HTTP)
                    .AllowAnyMethod()
                    .AllowAnyHeader()
                    .AllowCredentials(); // Assurez-vous que les cookies sont autorisés
