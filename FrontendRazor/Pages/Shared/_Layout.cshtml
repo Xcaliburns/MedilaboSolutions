@@ -16,11 +16,11 @@
             <div class="list-group list-group-flush">
                 <a class="list-group-item list-group-item-action bg-light" asp-area="" asp-page="/Index">Patients</a>
                 <a class="list-group-item list-group-item-action bg-light" asp-area="" asp-page="CreatePatient">Nouveau patient</a>
-                <a class="list-group-item list-group-item-action bg-light" asp-area="" asp-page="/Login">Connexion</a>
-                <form method="post" asp-page-handler="Logout" class="list-group-item list-group-item-action bg-light p-0">
+                <a class="list-group-item list-group-item-action bg-light" asp-area="" asp-page="/Login">Connexion</a>              
+                <form method="post" asp-page="/Logout" class="list-group-item list-group-item-action bg-light p-0">
                     <button type="submit" class="btn btn-danger w-100 text-start">Déconnexion</button>
                 </form>
-               
+
             </div>
         </div>
         <!-- /#sidebar-wrapper -->

@@ -25,6 +25,11 @@ builder.Services.AddHttpClient("GatewayClient", client =>
     client.BaseAddress = new Uri("https://localhost:7214/");
 });
 
+builder.Services.AddHttpClient("PatientService", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7088");
+});
+
 // Configure CORS
 builder.Services.AddCors(options =>
 {

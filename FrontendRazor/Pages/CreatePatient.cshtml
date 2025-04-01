@@ -5,7 +5,7 @@
 }
 
 <h2>Créer un nouveau patient</h2>
-
+<div class="form-container">
 <form method="post">
     <div class="form-group">
         <label asp-for="Patient.Nom"></label>
@@ -39,6 +39,7 @@
     </div>
     <button type="submit" class="btn btn-primary">Enregistrer</button>
 </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

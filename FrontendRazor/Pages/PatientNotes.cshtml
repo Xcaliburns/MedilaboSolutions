@@ -1,0 +1,65 @@
+﻿@page "{id:int}"
+@model FrontendRazor.Pages.PatientNotesModel
+@{
+    ViewData["Title"] = "Notes du patient";
+}
+
+<h2>Notes du patient</h2>
+<div class="note-container">
+    <!-- Section des informations du patient -->
+    <div class="patient-info">
+        <h3>Informations du patient</h3>
+        <p><strong>ID:</strong> @Model.Patient.Id</p>
+        <p><strong>Nom:</strong> @Model.Patient.Nom</p>
+        <p><strong>Prénom:</strong> @Model.Patient.Prenom</p>
+        <p><strong>Genre:</strong> @Model.Patient.Genre</p>
+        <p><strong>Date de naissance:</strong> @Model.Patient.DateDeNaissance.ToShortDateString()</p>
+        <p><strong>Téléphone:</strong> @Model.Patient.Telephone</p>
+        <p><strong>Adresse:</strong> @Model.Patient.Adresse</p>
+        <form method="post" asp-page-handler="RedirectToDonneesPatient">
+            <input type="hidden" name="patientId" value="@Model.Patient.Id" />
+            <button type="submit" class="btn mt-5 btn-update">Mise à jour</button>
+        </form>
+    </div>
+
+    <hr /> <!-- Trait de séparation -->
+    <!-- Afficher le niveau de risque du patient -->
+    <div class="patient-risk-level">
+        <h3>Niveau de risque du patient</h3>
+        <p>@ViewData["RiskLevel"]</p>
+    </div>
+
+    <hr /> <!-- Trait de séparation -->
+    <!-- Section des notes du patient -->
+    <div class="patient-notes">
+        <h3>Historique des Notes</h3>
+        @foreach (var note in Model.Notes)
+        {
+            <div class="note mt-3">
+                <pre>@note.PatientNote</pre>
+                <form method="post" asp-page-handler="Delete">
+                    <input type="hidden" name="noteId" value="@note._id" />
+                    <input type="hidden" name="patientId" value="@Model.Patient.Id" />
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+                <hr />
+            </div>
+        }
+    </div>
+
+    <hr /> <!-- Trait de séparation -->
+
+    <!-- Section pour ajouter une nouvelle note -->
+    <div class="add-note">
+        <h3>Ajouter une nouvelle note</h3>
+        <form method="post" asp-page-handler="AddNote">
+            <div class="form-group">
+                @* <label asp-for="newNote.PatientNote"></label> *@
+                <textarea asp-for="newNote.PatientNote" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="newNote.PatientNote" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="newNote.PatientId" value="@Model.Patient.Id" />
+            <button type="submit" class="btn mt-5 btn-primary">Ajouter une note</button>
+        </form>
+    </div>
+</div>
