@@ -13,7 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure DbContext with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure())
+        .LogTo(Console.WriteLine, LogLevel.Information));
+
 
 // Configure Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -111,8 +115,10 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<ApplicationDbContext>();
     var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    //DbInitializer.Initialize(context);
-    //await IdentityInitializer.Initialize(userManager, roleManager);
+    // Appliquer les migrations au démarrage
+    context.Database.Migrate();
+    DbInitializer.Initialize(context);
+    await IdentityInitializer.Initialize(userManager, roleManager);
 }
 
 // Configure the HTTP request pipeline.

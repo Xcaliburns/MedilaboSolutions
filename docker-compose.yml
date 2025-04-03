@@ -7,6 +7,22 @@ x-common-env: &common-env
   - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
 
 services:
+  sqlserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.sqlserver
+    container_name: sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      ACCEPT_EULA: "Y"
+    restart: always
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - medilabonet
+
   patientservice:
     image: patientservice:latest
     build:
@@ -15,7 +31,16 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
-    environment: *common-env
+    environment:  
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JwtSettings__Issuer=YourIssuer
+      - JwtSettings__Audience=YourAudience
+      - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=PatientDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True
+    depends_on:
+      - sqlserver  
+    networks:
+      - medilabonet
 
   patientnotes:
     image: patientnotes:latest
@@ -25,20 +50,24 @@ services:
     ports:
       - "8090:8090"
       - "8091:8091"
-    environment: *common-env
+    environment: *common-env    
+    networks:
+      - medilabonet
 
   gateway:
-     image: gateway:latest
-     build:
-        context: .
-        dockerfile: Gateway/Dockerfile
-     ports:
+    image: gateway:latest
+    build:
+      context: .
+      dockerfile: Gateway/Dockerfile
+    ports:
       - "5000:5000"
       - "5001:5001"
-     environment: *common-env
-     depends_on:
+    environment: *common-env
+    depends_on:
       - patientservice
       - patientnotes
+    networks:
+      - medilabonet
 
   diabeteriskreportservice:
     image: diabeteriskreportservice:latest
@@ -51,6 +80,10 @@ services:
     environment: *common-env
     depends_on:
       - gateway
+      - patientservice
+      - patientnotes 
+    networks:
+      - medilabonet
 
   frontendrazor:
     image: frontendrazor:latest
@@ -63,3 +96,13 @@ services:
     environment: *common-env
     depends_on:
       - gateway
+    networks:
+      - medilabonet
+
+volumes:
+  sqlserver_data:
+
+networks:
+  medilabonet:
+    name: medilabonet
+    driver: bridge

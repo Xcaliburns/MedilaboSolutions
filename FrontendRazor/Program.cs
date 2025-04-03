@@ -17,15 +17,22 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddRazorPages();
 
 //  **Correction du HttpClient pour utiliser le Gateway sur 5001**
+//builder.Services.AddHttpClient("GatewayClient", client =>
+//{
+//    //client.BaseAddress = new Uri("https://localhost:5001/"); //uniquement en local
+
+//});
 builder.Services.AddHttpClient("GatewayClient", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:5001/");
+    client.BaseAddress = new Uri("http://gateway:5000/");
+})
+.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
 });
 
-builder.Services.AddHttpClient("PatientService", client =>
-{
-    client.BaseAddress = new Uri("https://localhost:8081"); //  Correction du port mais celui ci ne doit etre supprimé, il passe outre le Gateway
-});
+
+
 
 // **Mise à jour de la configuration CORS**
 builder.Services.AddCors(options =>

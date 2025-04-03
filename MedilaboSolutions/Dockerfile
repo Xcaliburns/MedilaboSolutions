@@ -7,28 +7,39 @@ EXPOSE 443
 
 # Étape de construction
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
+# Installer dotnet-ef pour gérer les migrations
+RUN dotnet tool install -g dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
 COPY ["MedilaboSolutions/PatientService.csproj", "MedilaboSolutions/"]
 RUN dotnet restore "./MedilaboSolutions/PatientService.csproj"
 COPY . .
 WORKDIR "/src/MedilaboSolutions"
-RUN dotnet build "./PatientService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./PatientService.csproj" -c Release -o /app/build
 
 # Étape de publication
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./PatientService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./PatientService.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Étape finale avec HTTPS
-FROM base AS final
+# Étape finale
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS final
 WORKDIR /app
+
+# Installer `dotnet-ef` une seule fois dans `final`
+RUN dotnet tool install -g dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
 COPY --from=publish /app/publish .
-COPY ./MedilaboSolutions/certs/cert.pfx /https/cert.pfx 
- # Copie du certificat HTTPS dans le conteneur
+COPY ./MedilaboSolutions/certs/cert.pfx /https/cert.pfx
 
 ENV ASPNETCORE_URLS="https://+:8081;http://+:8080"
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password="Davjess0806+-"
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/https/cert.pfx"
 
+# Exécuter la migration **à l'intérieur du conteneur**
+CMD ["dotnet", "ef", "database", "update", "--project", "/app/PatientService.csproj"]
+
 ENTRYPOINT ["dotnet", "PatientService.dll"]
+

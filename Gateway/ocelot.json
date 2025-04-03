@@ -1,5 +1,19 @@
 {
   "Routes": [
+
+    {
+      "UpstreamPathTemplate": "/auth/login",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/auth/login",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "patientservice",
+          "Port": 8080
+        }
+      ]
+    },
+
     {
       "DownstreamPathTemplate": "/api/Patient/{id}",
       "DownstreamScheme": "https",

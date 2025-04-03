@@ -1,0 +1,11 @@
+FROM mcr.microsoft.com/mssql/server:2019-latest
+
+USER root  
+# Passer en mode root pour éviter les problèmes de permission
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
+
+ENV PATH="$PATH:/opt/mssql-tools/bin"
+
+USER mssql  
+# Repasser à l'utilisateur SQL Server
+ENTRYPOINT ["/opt/mssql/bin/sqlservr"]
