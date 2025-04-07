@@ -25,8 +25,7 @@ COPY --from=publish /app/publish .
 COPY ./PatientNotes/certs/cert.pfx /https/cert.pfx  
 # Certificat HTTPS partagé
 
-ENV ASPNETCORE_URLS="https://+:8091;http://+:8090"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Password="Davjess0806+-"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/https/cert.pfx"
+ENV ASPNETCORE_URLS="http://+:8090"
+
 
 ENTRYPOINT ["dotnet", "PatientNotes.dll"]

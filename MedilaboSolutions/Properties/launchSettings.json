@@ -8,7 +8,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:8081;http://localhost:8080"
+      "applicationUrl": "http://localhost:8080"
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -24,12 +24,11 @@
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_URLS": "https://+:8081;http://+:8080",
-        "ASPNETCORE_Kestrel__Certificates__Default__Password": "Davjess0806+-",
-        "ASPNETCORE_Kestrel__Certificates__Default__Path": "/https/cert.pfx"
+        "ASPNETCORE_URLS": "http://+:8080"
+        
       },
       "publishAllPorts": true,
-      "useSSL": true
+      "useSSL": false
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",

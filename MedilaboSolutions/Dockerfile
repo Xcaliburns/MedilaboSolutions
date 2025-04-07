@@ -2,8 +2,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 8080
-EXPOSE 8081
-EXPOSE 443
+
 
 # Étape de construction
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -34,9 +33,8 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 COPY --from=publish /app/publish .
 COPY ./MedilaboSolutions/certs/cert.pfx /https/cert.pfx
 
-ENV ASPNETCORE_URLS="https://+:8081;http://+:8080"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Password="Davjess0806+-"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/https/cert.pfx"
+ENV ASPNETCORE_URLS="http://+:8080"
+
 
 # Exécuter la migration **à l'intérieur du conteneur**
 CMD ["dotnet", "ef", "database", "update", "--project", "/app/PatientService.csproj"]

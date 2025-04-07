@@ -16,11 +16,11 @@
 
     {
       "DownstreamPathTemplate": "/api/Patient/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 8081
+          "Host": "patientservice",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/patient/{id}",
@@ -32,11 +32,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/Patient",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 8081
+          "Host": "patientservice",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/patient",
@@ -48,11 +48,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/Note",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 8091
+          "Host": "patientnotes",
+          "Port": 8090
         }
       ],
       "UpstreamPathTemplate": "/api/note",
@@ -64,11 +64,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/Note/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 8091
+          "Host": "patientnotes",
+          "Port": 8090
         }
       ],
       "UpstreamPathTemplate": "/api/note/{id}",
@@ -80,11 +80,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/DiabeteReport/Report/{patientId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5021
+          "Host": "diabeteriskreportservice",
+          "Port": 5020
         }
       ],
       "UpstreamPathTemplate": "/report/{patientId}",
@@ -96,6 +96,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:5001"
+    "BaseUrl": "http://gateway:5000"
   }
 }

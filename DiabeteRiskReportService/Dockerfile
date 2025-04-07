@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 5020
-EXPOSE 5021
+
 
 # Étape de construction
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -27,8 +27,6 @@ COPY --from=publish /app/publish .
 COPY ./DiabeteRiskReportService/certs/cert.pfx /https/cert.pfx  
 # Copie du certificat HTTPS dans le conteneur
 
-ENV ASPNETCORE_URLS="https://+:5021;http://+:5020"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Password="Davjess0806+-"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/https/cert.pfx"
+ENV ASPNETCORE_URLS="http://+:5020"
 
 ENTRYPOINT ["dotnet", "DiabeteRiskReportService.dll"]

@@ -54,12 +54,12 @@ builder.Services.AddCors(options =>
         builder =>
         {
             builder.WithOrigins(
-                "https://localhost:5001",  // Gateway HTTPS
+                
                 "http://localhost:5000",   // Gateway HTTP
-                "https://localhost:5011",  // FrontendRazor
-                "https://localhost:8081",  // PatientService
-                "https://localhost:8091",  // PatientNotes
-                "https://localhost:5021"   // DiabeteRiskReportService
+                "http://localhost:5010",  // FrontendRazor
+                "http://localhost:8080",  // PatientService
+                "http://localhost:8090",  // PatientNotes
+                "http://localhost:5020"   // DiabeteRiskReportService
             )
             .AllowAnyMethod()
             .AllowAnyHeader()
@@ -75,7 +75,7 @@ builder.Logging.AddConsole();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigins");
 

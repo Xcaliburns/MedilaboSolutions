@@ -53,7 +53,7 @@ builder.Services.AddCors(options =>
         builder =>
         {
             builder.WithOrigins(
-                "https://localhost:5001",  // Gateway HTTPS
+              //  "https://localhost:5001",  // Gateway HTTPS
                 "http://localhost:5000")  // Gateway HTTP)
                    .AllowAnyMethod()
                    .AllowAnyHeader()
@@ -131,7 +131,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigins");
 

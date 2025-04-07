@@ -16,21 +16,28 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 
-//  **Correction du HttpClient pour utiliser le Gateway sur 5001**
+
 //builder.Services.AddHttpClient("GatewayClient", client =>
 //{
-//    //client.BaseAddress = new Uri("https://localhost:5001/"); //uniquement en local
-
+//    client.BaseAddress = new Uri("http://gateway:5000/");
+//})
+//.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+//{
+//    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
 //});
+
+builder.Services.AddTransient<AuthTokenHandler>();
+
+
 builder.Services.AddHttpClient("GatewayClient", client =>
 {
     client.BaseAddress = new Uri("http://gateway:5000/");
 })
+.AddHttpMessageHandler<AuthTokenHandler>()
 .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
 {
     ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
 });
-
 
 
 
@@ -41,7 +48,7 @@ builder.Services.AddCors(options =>
         builder =>
         {
             builder.WithOrigins(
-                "https://localhost:5001",  // Gateway HTTPS
+               // "https://localhost:5001",  // Gateway HTTPS
                 "http://localhost:5000"  // Gateway HTTP               
             )
             .AllowAnyMethod()
@@ -72,7 +79,7 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowSpecificOrigins");

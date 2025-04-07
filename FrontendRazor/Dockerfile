@@ -5,8 +5,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 5010
-EXPOSE 5011
-EXPOSE 443
+
 
 
 # This stage is used to build the service project
@@ -31,8 +30,7 @@ COPY --from=publish /app/publish .
 COPY ./MedilaboSolutions/certs/cert.pfx /https/cert.pfx 
  # Copie du certificat HTTPS dans le conteneur
 
-ENV ASPNETCORE_URLS="https://+:5011;http://+:5010"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Password="Davjess0806+-"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/https/cert.pfx"
+ENV ASPNETCORE_URLS="http://+:5010"
+
 
 ENTRYPOINT ["dotnet", "FrontendRazor.dll"]

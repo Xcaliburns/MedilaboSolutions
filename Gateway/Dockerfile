@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 5000
-EXPOSE 5001
+
 
 # Étape de construction
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -27,8 +27,11 @@ COPY --from=publish /app/publish .
 COPY ./Gateway/certs/cert.pfx /https/cert.pfx  
 # Ajout du certificat HTTPS
 
-ENV ASPNETCORE_URLS="https://+:5001;http://+:5000"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Password="Davjess0806+-"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/https/cert.pfx"
+ENV ASPNETCORE_URLS="http://+:5000"
+
+USER root
+RUN apt-get update && apt-get install -y curl
+USER app
+
 
 ENTRYPOINT ["dotnet", "Gateway.dll"]

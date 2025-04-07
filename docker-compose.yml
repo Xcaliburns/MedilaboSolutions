@@ -30,7 +30,7 @@ services:
       dockerfile: MedilaboSolutions/Dockerfile
     ports:
       - "8080:8080"
-      - "8081:8081"
+      
     environment:  
       - ASPNETCORE_ENVIRONMENT=Development
       - JwtSettings__Issuer=YourIssuer
@@ -49,7 +49,7 @@ services:
       dockerfile: PatientNotes/Dockerfile
     ports:
       - "8090:8090"
-      - "8091:8091"
+      
     environment: *common-env    
     networks:
       - medilabonet
@@ -61,7 +61,7 @@ services:
       dockerfile: Gateway/Dockerfile
     ports:
       - "5000:5000"
-      - "5001:5001"
+      
     environment: *common-env
     depends_on:
       - patientservice
@@ -76,7 +76,7 @@ services:
       dockerfile: DiabeteRiskReportService/Dockerfile
     ports:
       - "5020:5020"
-      - "5021:5021"
+      
     environment: *common-env
     depends_on:
       - gateway
@@ -92,7 +92,7 @@ services:
       dockerfile: FrontendRazor/Dockerfile
     ports:
       - "5010:5010"
-      - "5011:5011"
+      
     environment: *common-env
     depends_on:
       - gateway
