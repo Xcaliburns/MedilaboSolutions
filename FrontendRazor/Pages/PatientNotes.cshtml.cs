@@ -41,8 +41,8 @@ namespace FrontendRazor.Pages
             Console.WriteLine($"Requête envoyée : note/patient/{id}");
             Patient = await client.GetFromJsonAsync<Patient>($"patient/{id}");
             Console.WriteLine($" Requête envoyée : patient/{id}");
-            // var riskLevelResponse = await GetPatientRiskLevelAsync(id);
-            //ViewData["RiskLevel"] = riskLevelResponse.RiskLevel;
+            var riskLevelResponse = await GetPatientRiskLevelAsync(id);
+            ViewData["RiskLevel"] = riskLevelResponse.RiskLevel;
         }
            
 
