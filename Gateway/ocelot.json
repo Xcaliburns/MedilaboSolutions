@@ -56,14 +56,14 @@
         }
       ],
       "UpstreamPathTemplate": "/api/note",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "GET", "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
     },
     {
-      "DownstreamPathTemplate": "/api/Note/{id}",
+      "DownstreamPathTemplate": "/api/note/patient/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -71,7 +71,7 @@
           "Port": 8090
         }
       ],
-      "UpstreamPathTemplate": "/api/note/{id}",
+      "UpstreamPathTemplate": "/note/patient/{id}",
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
