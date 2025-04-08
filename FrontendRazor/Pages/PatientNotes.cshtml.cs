@@ -34,8 +34,13 @@ namespace FrontendRazor.Pages
             {
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
-            Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{id}");
+
+
+
+            Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"note/patient/{id}");
+            Console.WriteLine($"Requête envoyée : note/patient/{id}");
             Patient = await client.GetFromJsonAsync<Patient>($"patient/{id}");
+            Console.WriteLine($" Requête envoyée : patient/{id}");
             var riskLevelResponse = await GetPatientRiskLevelAsync(id);
             ViewData["RiskLevel"] = riskLevelResponse.RiskLevel;
         }

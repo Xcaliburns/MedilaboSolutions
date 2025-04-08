@@ -39,13 +39,30 @@ namespace PatientNotes.Controllers
         //    return note;
         //}
 
-        // les notes d'un patient
         [HttpGet("patient/{PatientId}")]
         public async Task<ActionResult<List<Note>>> GetByPatientId(int PatientId)
         {
-            var notes = await _notesService.GetByPatientId(PatientId);
-            return notes;
+            try
+            {
+                Console.WriteLine($" Requête reçue pour PatientID: {PatientId}");
+                var notes = await _notesService.GetByPatientId(PatientId);
+
+                if (notes == null || notes.Count == 0)
+                {
+                    Console.WriteLine($" Aucune note trouvée pour PatientID {PatientId}");
+                    return NotFound($"Aucune note trouvée pour PatientID {PatientId}");
+                }
+
+                Console.WriteLine($"Notes trouvées: {notes.Count}");
+                return Ok(notes);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($" Erreur API PatientNotes: {ex.Message}");
+                return StatusCode(500, $"Erreur interne du serveur : {ex.Message}");
+            }
         }
+
         // ajouter une note
         [HttpPost]
         public async Task<ActionResult<Note>> CreateAsync(NoteRequest newNoteRequest)

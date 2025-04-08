@@ -13,7 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure DbContext with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure())
+        .LogTo(Console.WriteLine, LogLevel.Information));
+
 
 // Configure Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -48,7 +52,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigins",
         builder =>
         {
-            builder.WithOrigins("https://localhost:7214")
+            builder.WithOrigins(
+              //  "https://localhost:5001",  // Gateway HTTPS
+                "http://localhost:5000")  // Gateway HTTP)
                    .AllowAnyMethod()
                    .AllowAnyHeader()
                    .AllowCredentials(); // Assurez-vous que les cookies sont autorisés
@@ -109,6 +115,8 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<ApplicationDbContext>();
     var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    // Appliquer les migrations au démarrage
+    context.Database.Migrate();
     DbInitializer.Initialize(context);
     await IdentityInitializer.Initialize(userManager, roleManager);
 }
@@ -123,7 +131,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigins");
 

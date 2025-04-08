@@ -1,10 +1,7 @@
 using FrontendRazor.Data;
-
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,27 +16,44 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 
-// Configure HttpClient to use the Ocelot Gateway URL
+
+//builder.Services.AddHttpClient("GatewayClient", client =>
+//{
+//    client.BaseAddress = new Uri("http://gateway:5000/");
+//})
+//.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+//{
+//    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+//});
+
+builder.Services.AddTransient<AuthTokenHandler>();
+
+
 builder.Services.AddHttpClient("GatewayClient", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7214/");
-});
-
-builder.Services.AddHttpClient("PatientService", client =>
+    client.BaseAddress = new Uri("http://gateway:5000/");
+})
+.AddHttpMessageHandler<AuthTokenHandler>()
+.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
 {
-    client.BaseAddress = new Uri("https://localhost:7088");
+    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
 });
 
-// Configure CORS
+
+
+// **Mise à jour de la configuration CORS**
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
         builder =>
         {
-            builder.WithOrigins("https://localhost:7134")
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowCredentials();
+            builder.WithOrigins(
+               // "https://localhost:5001",  // Gateway HTTPS
+                "http://localhost:5000"  // Gateway HTTP               
+            )
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
         });
 });
 
@@ -51,8 +65,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/logout";
         options.AccessDeniedPath = "/login";
     });
-
-
 
 var app = builder.Build();
 
@@ -67,16 +79,12 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseCors("AllowSpecificOrigins");
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapRazorPages();
 
 app.Run();

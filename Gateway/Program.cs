@@ -53,12 +53,20 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigins",
         builder =>
         {
-            builder.WithOrigins("https://localhost:7213", "https://localhost:7088", "https://localhost:7134" , "https://localhost:7164", "https://localhost:5213")
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowCredentials();
+            builder.WithOrigins(
+                
+                "http://localhost:5000",   // Gateway HTTP
+                "http://localhost:5010",  // FrontendRazor
+                "http://localhost:8080",  // PatientService
+                "http://localhost:8090",  // PatientNotes
+                "http://localhost:5020"   // DiabeteRiskReportService
+            )
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials(); // Autoriser les cookies si besoin
         });
 });
+
 
 // Configure logging
 builder.Logging.ClearProviders();
@@ -67,7 +75,7 @@ builder.Logging.AddConsole();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigins");
 

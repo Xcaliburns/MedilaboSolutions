@@ -15,10 +15,18 @@ public class NotesRepository : INotesRepository
 
     public NotesRepository(IOptions<PatientNotesDatabaseSettings> patientNotesDatabaseSettings)
     {
+        if (patientNotesDatabaseSettings?.Value == null || string.IsNullOrEmpty(patientNotesDatabaseSettings.Value.ConnectionString))
+        {
+            throw new InvalidOperationException(" `patientNotesDatabaseSettings.Value.ConnectionString` est NULL dans NotesRepository. Vérifie l'injection des paramètres.");
+        }
+
+        Console.WriteLine($" ConnectionString dans NotesRepository: {patientNotesDatabaseSettings.Value.ConnectionString}");
+
         var mongoClient = new MongoClient(patientNotesDatabaseSettings.Value.ConnectionString);
         var mongoDatabase = mongoClient.GetDatabase(patientNotesDatabaseSettings.Value.DatabaseName);
         _notesCollection = mongoDatabase.GetCollection<Note>(patientNotesDatabaseSettings.Value.CollectionName);
     }
+
 
     //toutes les notes
     public async Task<List<Note>> GetAsync() =>
@@ -28,9 +36,31 @@ public class NotesRepository : INotesRepository
     public async Task<Note> GetAsync(string id) =>
         await _notesCollection.Find(x => x._id == id).FirstOrDefaultAsync();
 
-    // les notes d'un patient
-    public async Task<List<Note>> GetByPatientId(int patientId) =>
-        await _notesCollection.Find(x => x.PatientId == patientId).ToListAsync();
+    public async Task<List<Note>> GetByPatientId(int patientId)
+    {
+        try
+        {
+            Console.WriteLine($" Recherche des notes pour PatientID {patientId}...");
+            var result = await _notesCollection.Find(x => x.PatientId == patientId).ToListAsync();
+
+            if (result == null || result.Count == 0)
+            {
+                Console.WriteLine($" Aucune note trouvée pour PatientID {patientId} !");
+            }
+            else
+            {
+                Console.WriteLine($" Notes trouvées: {result.Count} notes récupérées.");
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($" Erreur MongoDB lors de la récupération des notes: {ex.Message}");
+            throw;
+        }
+    }
+
 
     // ajouter une note
     public async Task CreateAsync(Note newNote) =>
