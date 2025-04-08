@@ -50,7 +50,8 @@ namespace PatientNotes.Controllers
                 if (notes == null || notes.Count == 0)
                 {
                     Console.WriteLine($" Aucune note trouvée pour PatientID {PatientId}");
-                    return NotFound($"Aucune note trouvée pour PatientID {PatientId}");
+                    // Retourner une liste vide avec un code 200 OK
+                    notes = new List<Note>();
                 }
 
                 Console.WriteLine($"Notes trouvées: {notes.Count}");
