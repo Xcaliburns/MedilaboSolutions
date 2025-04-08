@@ -1,11 +1,7 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using FrontendRazor.Models;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FrontendRazor.Pages
 {

@@ -1,8 +1,6 @@
 ﻿using MedilaboSolutionsBack1.Data;
 using MedilaboSolutionsBack1.Interfaces;
 using MedilaboSolutionsBack1.Models;
-using System.Collections.Generic;
-using System.Linq;
 
 
 namespace MedilaboSolutionsBack1.Repositories

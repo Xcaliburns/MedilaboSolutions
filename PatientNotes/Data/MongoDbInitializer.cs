@@ -1,6 +1,5 @@
 ﻿using MongoDB.Driver;
 using PatientNotes.Models;
-using System.Collections.Generic;
 
 public static class MongoDbInitializer
 {

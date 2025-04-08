@@ -31,12 +31,12 @@ namespace FrontendRazor.Pages
             }
 
             Patient = await client.GetFromJsonAsync<Patient>($"patient/{id}");
-         
+
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-           
+
             if (!ModelState.IsValid)
             {
                 System.Diagnostics.Debug.WriteLine("ModelState is not valid");

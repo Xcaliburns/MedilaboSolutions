@@ -1,9 +1,5 @@
 ﻿using DiabeteRiskReportService.Interfaces;
-using DiabeteRiskReportService.Models;
-using System.Drawing;
 using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Reflection.Metadata.BlobBuilder;
 
 
 namespace DiabeteRiskReportService.Services

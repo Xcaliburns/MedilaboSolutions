@@ -17,14 +17,6 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddRazorPages();
 
 
-//builder.Services.AddHttpClient("GatewayClient", client =>
-//{
-//    client.BaseAddress = new Uri("http://gateway:5000/");
-//})
-//.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-//{
-//    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-//});
 
 builder.Services.AddTransient<AuthTokenHandler>();
 
@@ -48,8 +40,7 @@ builder.Services.AddCors(options =>
         builder =>
         {
             builder.WithOrigins(
-               // "https://localhost:5001",  // Gateway HTTPS
-                "http://localhost:5000"  // Gateway HTTP               
+                       "http://localhost:5000"  // Gateway HTTP               
             )
             .AllowAnyMethod()
             .AllowAnyHeader()

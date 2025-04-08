@@ -25,7 +25,7 @@ namespace FrontendRazor.Pages
             if (string.IsNullOrEmpty(authToken))
             {
                 return RedirectToLogin();
-            }        
+            }
 
             return Page();
         }

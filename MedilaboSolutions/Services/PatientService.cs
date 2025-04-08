@@ -1,6 +1,5 @@
 ﻿using MedilaboSolutionsBack1.Interfaces;
 using MedilaboSolutionsBack1.Models;
-using System.Collections.Generic;
 
 namespace MedilaboSolutionsBack1.Services
 {

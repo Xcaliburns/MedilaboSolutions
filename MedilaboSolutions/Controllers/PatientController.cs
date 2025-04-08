@@ -1,9 +1,7 @@
-﻿using MedilaboSolutionsBack1.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using MedilaboSolutionsBack1.Interfaces;
+﻿using MedilaboSolutionsBack1.Interfaces;
+using MedilaboSolutionsBack1.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MedilaboSolutionsBack1.Controllers
 {

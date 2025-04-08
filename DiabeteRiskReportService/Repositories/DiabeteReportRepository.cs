@@ -2,7 +2,6 @@
 using DiabeteRiskReportService.Interfaces;
 using DiabeteRiskReportService.Models;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 
 

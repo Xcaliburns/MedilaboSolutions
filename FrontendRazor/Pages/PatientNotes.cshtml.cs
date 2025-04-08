@@ -44,7 +44,7 @@ namespace FrontendRazor.Pages
             var riskLevelResponse = await GetPatientRiskLevelAsync(id);
             ViewData["RiskLevel"] = riskLevelResponse.RiskLevel;
         }
-           
+
 
         public async Task<IActionResult> OnPostAddNoteAsync(NoteRequest newNote) //Attention à ne pas mettre un nom comme OnOstAsync, cela peut creer des ambiguités
         {
@@ -52,7 +52,7 @@ namespace FrontendRazor.Pages
             var authToken = HttpContext.Request.Cookies["authToken"];
 
             if (!string.IsNullOrEmpty(authToken))
-            { 
+            {
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
             var response = await client.PostAsJsonAsync("/api/note", newNote);
@@ -98,7 +98,7 @@ namespace FrontendRazor.Pages
             var response = await client.DeleteAsync($"/api/note/{noteId}");
             if (response.IsSuccessStatusCode)
             {
-               // Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{patientId}");
+                // Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{patientId}");
 
                 // Recharger les données du patient
                 await OnGetAsync(patientId);
@@ -112,7 +112,7 @@ namespace FrontendRazor.Pages
             }
         }
 
-     
+
 
 
         public IActionResult OnPostRedirectToDonneesPatient(int patientId)
