@@ -1,12 +1,10 @@
 version: '3.8'
 
-x-common-env: &common-env
-  - ASPNETCORE_ENVIRONMENT=Development
-  - JwtSettings__Issuer=YourIssuer
-  - JwtSettings__Audience=YourAudience
-  - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
+
 
 services:
+
+## SQL Server
   sqlserver:
     build:
       context: .
@@ -22,7 +20,7 @@ services:
       - sqlserver_data:/var/opt/mssql
     networks:
       - medilabonet
-
+## MongoDB
   mongodb:
     image: mongo:latest
     container_name: mongodb
@@ -36,7 +34,7 @@ services:
     networks:
       - medilabonet
 
-
+## Patient Service
   patientservice:
     image: patientservice:latest
     build:
@@ -55,7 +53,7 @@ services:
       - sqlserver  
     networks:
       - medilabonet
-
+## Patient Notes Service
   patientnotes:
     image: patientnotes:latest
     build:
@@ -77,6 +75,7 @@ services:
     networks:
       - medilabonet
 
+## Gateway
   gateway:
     image: gateway:latest
     build:
@@ -85,13 +84,19 @@ services:
     ports:
       - "5000:5000"
       
-    environment: *common-env
+    environment: 
+        - ASPNETCORE_ENVIRONMENT=Development
+        - JwtSettings__Issuer=YourIssuer
+        - JwtSettings__Audience=YourAudience
+        - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
+        
     depends_on:
       - patientservice
       - patientnotes
     networks:
       - medilabonet
 
+## Diabete Risk Report Service
   diabeteriskreportservice:
     image: diabeteriskreportservice:latest
     build:
@@ -100,7 +105,13 @@ services:
     ports:
       - "5020:5020"
       
-    environment: *common-env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JwtSettings__Issuer=YourIssuer
+      - JwtSettings__Audience=YourAudience
+      - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
+      - GatewayUrl=http://gateway:5000/
+    
     depends_on:
       - gateway
       - patientservice
@@ -108,6 +119,7 @@ services:
     networks:
       - medilabonet
 
+      ## Frontend Razor
   frontendrazor:
     image: frontendrazor:latest
     build:
@@ -116,16 +128,20 @@ services:
     ports:
       - "5010:5010"
       
-    environment: *common-env
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - GatewayUrl=http://gateway:5000
     depends_on:
       - gateway
     networks:
       - medilabonet
 
+      ##volumes
 volumes:
   sqlserver_data:
   mongo_data:
 
+  ##networks
 networks:
   medilabonet:
     name: medilabonet

@@ -15,7 +15,7 @@ namespace FrontendRazor.Pages
             _httpClientFactory = httpClientFactory;
         }
 
-        public List<Patient> Patients { get; set; } = new List<Patient>();
+        public List<PatientDto> Patients { get; set; } = new List<PatientDto>();
         public bool IsAuthenticated { get; private set; }
         public bool IsAuthorized { get; private set; }
 
@@ -23,7 +23,6 @@ namespace FrontendRazor.Pages
         {
             var client = _httpClientFactory.CreateClient("GatewayClient");
 
-            // Récupérer le jeton d'authentification à partir des cookies
             var authToken = HttpContext.Request.Cookies["authToken"];
             if (!string.IsNullOrEmpty(authToken))
             {
@@ -32,15 +31,13 @@ namespace FrontendRazor.Pages
 
             try
             {
-                Patients = await client.GetFromJsonAsync<List<Patient>>("patient");
+                Patients = await client.GetFromJsonAsync<List<PatientDto>>("patient"); // Adapter au format attendu
             }
             catch (HttpRequestException ex)
             {
-                // Gérer les erreurs de requête HTTP
                 ModelState.AddModelError(string.Empty, "Une erreur s'est produite lors de la récupération des patients.");
             }
 
-            // Définir les propriétés IsAuthenticated et IsAuthorized
             var user = HttpContext.User;
             IsAuthenticated = user.Identity.IsAuthenticated;
             IsAuthorized = user.IsInRole("Organisateur") || user.IsInRole("Praticien");

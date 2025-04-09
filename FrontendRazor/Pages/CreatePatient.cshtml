@@ -32,10 +32,11 @@
             <span asp-validation-for="Patient.Genre" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Patient.Adresse"></label>
-            <input asp-for="Patient.Adresse" class="form-control" />
-            <span asp-validation-for="Patient.Adresse" class="text-danger"></span>
+            <label asp-for="Patient.Adresse.Libele"></label> <!-- Ajustement -->
+            <input asp-for="Patient.Adresse.Libele" class="form-control" />
+            <span asp-validation-for="Patient.Adresse.Libele" class="text-danger"></span>
         </div>
+
         <div class="form-group">
             <label asp-for="Patient.Telephone"></label>
             <input asp-for="Patient.Telephone" class="form-control" />

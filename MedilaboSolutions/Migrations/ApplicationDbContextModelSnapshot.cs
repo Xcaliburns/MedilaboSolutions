@@ -22,6 +22,22 @@ namespace MedilaboSolutionsBack1.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("MedilaboSolutionsBack1.Models.Adresse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Libele")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Adresses");
+                });
+
             modelBuilder.Entity("MedilaboSolutionsBack1.Models.Patient", b =>
                 {
                     b.Property<int>("Id")
@@ -30,8 +46,8 @@ namespace MedilaboSolutionsBack1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Adresse")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("AdresseId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateDeNaissance")
                         .HasColumnType("datetime2");
@@ -52,6 +68,8 @@ namespace MedilaboSolutionsBack1.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AdresseId");
 
                     b.ToTable("Patients");
                 });
@@ -254,6 +272,16 @@ namespace MedilaboSolutionsBack1.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("MedilaboSolutionsBack1.Models.Patient", b =>
+                {
+                    b.HasOne("MedilaboSolutionsBack1.Models.Adresse", "Adresse")
+                        .WithMany("Patients")
+                        .HasForeignKey("AdresseId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Adresse");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -303,6 +331,11 @@ namespace MedilaboSolutionsBack1.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MedilaboSolutionsBack1.Models.Adresse", b =>
+                {
+                    b.Navigation("Patients");
                 });
 #pragma warning restore 612, 618
         }

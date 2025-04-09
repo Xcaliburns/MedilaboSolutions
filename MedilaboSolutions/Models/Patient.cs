@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MedilaboSolutionsBack1.Models
 {
@@ -16,7 +18,10 @@ namespace MedilaboSolutionsBack1.Models
         [RegularExpression("^(H|F)$", ErrorMessage = "Le champ Genre doit être 'H' pour Homme ou 'F' pour Femme.")]
         public string Genre { get; set; }
        
-        public string? Adresse { get; set; }
+        public int? AdresseId { get; set; }
         public string? Telephone { get; set; }
+
+        [ForeignKey("AdresseId")]
+        public virtual Adresse? Adresse { get; set; } // Navigation property
     }
 }

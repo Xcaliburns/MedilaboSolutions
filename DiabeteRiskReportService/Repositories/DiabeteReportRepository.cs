@@ -22,23 +22,39 @@ namespace DiabeteRiskReportService.Repository
             return await Task.FromResult("Report generated successfully");
         }
 
-        public async Task<Patient> GetPatientData(int patientId, string authToken)
+        public async Task<PatientDto> GetPatientData(int patientId, string authToken)
         {
             if (!string.IsNullOrEmpty(authToken))
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
 
-            var response = await _httpClient.GetAsync($"/patient/{patientId}");
+            var response = await _httpClient.GetAsync($"patient/{patientId}");
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                // Log or inspect the JSON content here
-                Console.WriteLine(json); // Or use any logging mechanism
-                return JsonSerializer.Deserialize<Patient>(json);
+                Console.WriteLine($" JSON reçu du patient: {json}"); //  Vérification des données
+
+
+                try
+                {
+                    var patient = JsonSerializer.Deserialize<PatientDto>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true //  Désérialisation insensible à la casse
+                    });
+
+                    Console.WriteLine($" Patient correctement désérialisé: {JsonSerializer.Serialize(patient)}");
+                    return patient;
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine($" Erreur de désérialisation : {ex.Message}");
+                    return null;
+                }
             }
             return null;
         }
+
 
         public async Task<List<PatientNote>> GetPatientNotes(int patientId, string authToken)
         {
@@ -47,7 +63,7 @@ namespace DiabeteRiskReportService.Repository
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
 
-            var response = await _httpClient.GetAsync($"/note/patient/{patientId}");
+            var response = await _httpClient.GetAsync($"note/patient/{patientId}");
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
