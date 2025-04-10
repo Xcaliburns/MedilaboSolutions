@@ -29,8 +29,6 @@ namespace FrontendRazor.Pages
         public async Task OnGetAsync(int id)
         {
             var client = _httpClientFactory.CreateClient("GatewayClient");
-
-            // Récupérer le jeton d'authentification à partir des cookies
             var authToken = HttpContext.Request.Cookies["authToken"];
             if (!string.IsNullOrEmpty(authToken))
             {
@@ -40,16 +38,18 @@ namespace FrontendRazor.Pages
             try
             {
                 // Récupération des notes du patient
-                Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"note/patient/{id}");
+                var notesResponse = await client.GetFromJsonAsync<List<NoteResponse>>($"note/patient/{id}");
+                Notes = notesResponse ?? new List<NoteResponse>();
                 Console.WriteLine($" Requête envoyée : note/patient/{id}");
 
                 // Récupération des informations du patient
-                Patient = await client.GetFromJsonAsync<PatientDto>($"patient/{id}"); //  Assurer que le format attendu est PatientDto
+                var patientResponse = await client.GetFromJsonAsync<PatientDto>($"patient/{id}");
+                Patient = patientResponse ?? new PatientDto();
                 Console.WriteLine($" Requête envoyée : patient/{id}");
 
                 // Récupération du niveau de risque du patient
                 var riskLevelResponse = await GetPatientRiskLevelAsync(id);
-                ViewData["RiskLevel"] = riskLevelResponse?.RiskLevel ?? "Inconnu"; //  Gérer le cas où la réponse est nulle
+                ViewData["RiskLevel"] = riskLevelResponse?.RiskLevel ?? "Inconnu";
             }
             catch (HttpRequestException ex)
             {
@@ -60,7 +60,7 @@ namespace FrontendRazor.Pages
 
 
 
-        public async Task<IActionResult> OnPostAddNoteAsync(NoteRequest newNote) //Attention à ne pas mettre un nom comme OnOstAsync, cela peut creer des ambiguités
+        public async Task<IActionResult> OnPostAddNoteAsync(NoteRequest newNote)
         {
             var client = _httpClientFactory.CreateClient("GatewayClient");
             var authToken = HttpContext.Request.Cookies["authToken"];
@@ -75,17 +75,17 @@ namespace FrontendRazor.Pages
                 var createdNote = await response.Content.ReadFromJsonAsync<NoteRequest>();
                 if (createdNote == null)
                 {
-                    // recharger les données du patient
+                    Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{newNote.PatientId}") ?? new List<NoteResponse>();
 
                 }
                 if (createdNote != null)
                 {
-                    Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{createdNote.PatientId}");
+                    Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{createdNote.PatientId}") ?? new List<NoteResponse>();
                 }
 
                 // Réinitialiser l'objet côté serveur
                 this.newNote = new NoteRequest();
-                ModelState.Clear(); // Nettoyer l'état du modèle
+                ModelState.Clear();
 
                 // Recharger les données du patient
                 await OnGetAsync(newNote.PatientId);
@@ -112,11 +112,8 @@ namespace FrontendRazor.Pages
             var response = await client.DeleteAsync($"/api/note/{noteId}");
             if (response.IsSuccessStatusCode)
             {
-                // Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{patientId}");
-
                 // Recharger les données du patient
                 await OnGetAsync(patientId);
-
                 return Page();
             }
             else
@@ -146,9 +143,6 @@ namespace FrontendRazor.Pages
             var response = await client.GetAsync($"/report/{patientId}");
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            // Log the raw response content
-            Console.WriteLine($"Response content: {responseContent}");
-
             if (response.IsSuccessStatusCode)
             {
                 try
@@ -160,22 +154,16 @@ namespace FrontendRazor.Pages
                     }
                     else
                     {
-                        // Log the null response
-                        Console.WriteLine("Deserialization returned null.");
                         return new RiskLevelResponse { RiskLevel = "Error parsing risk level response" };
                     }
                 }
                 catch (JsonException ex)
                 {
-                    // Log the exception
-                    Console.WriteLine($"JsonException: {ex.Message}");
                     return new RiskLevelResponse { RiskLevel = "Error parsing risk level response" };
                 }
             }
             else
             {
-                // Log the error response
-                Console.WriteLine($"Error response: {responseContent}");
                 return new RiskLevelResponse { RiskLevel = "Unable to retrieve risk level" };
             }
         }

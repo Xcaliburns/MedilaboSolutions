@@ -17,7 +17,7 @@ namespace FrontendRazor.Pages
         }
 
         [BindProperty]
-        public PatientDto Patient { get; set; } //  Utilisation de PatientDto
+        public PatientDto Patient { get; set; } 
 
 
         public async Task OnGetAsync(int id)
@@ -30,7 +30,7 @@ namespace FrontendRazor.Pages
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
 
-            Patient = await client.GetFromJsonAsync<PatientDto>($"patient/{id}"); //  Adapter au format attendu
+            Patient = await client.GetFromJsonAsync<PatientDto>($"patient/{id}"); 
         }
 
 
@@ -68,9 +68,11 @@ namespace FrontendRazor.Pages
                 return RedirectToLogin();
             }
 
-            // Gérer les erreurs de mise à jour
+            // Gérer les erreurs de mise à jour (voir pour ajouter un logger)
             System.Diagnostics.Debug.WriteLine("Update failed");
             ModelState.AddModelError(string.Empty, "Erreur lors de la mise à jour des données du patient.");
+          
+
             return Page();
         }
 

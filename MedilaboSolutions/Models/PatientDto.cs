@@ -8,7 +8,7 @@
         public DateTime DateDeNaissance { get; set; }
         public string Genre { get; set; }
         public string Telephone { get; set; }
-        public AdresseDto? Adresse { get; set; } // Inclure l'adresse directement
+        public AdresseDto? Adresse { get; set; } 
     }
 
     public class AdresseDto

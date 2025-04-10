@@ -42,7 +42,7 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
-        //RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role" // Assurez-vous que le claim de rôle est défini
+       
     };
 });
 
@@ -52,12 +52,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigins",
         builder =>
         {
-            builder.WithOrigins(
-              //  "https://localhost:5001",  // Gateway HTTPS
+            builder.WithOrigins(             
                 "http://localhost:5000")  // Gateway HTTP)
                    .AllowAnyMethod()
                    .AllowAnyHeader()
-                   .AllowCredentials(); // Assurez-vous que les cookies sont autorisés
+                   .AllowCredentials(); 
         });
 });
 
@@ -121,7 +120,7 @@ using (var scope = app.Services.CreateScope())
     await IdentityInitializer.Initialize(userManager, roleManager);
 }
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -131,7 +130,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-//app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigins");
 

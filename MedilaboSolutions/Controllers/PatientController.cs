@@ -7,7 +7,7 @@ namespace MedilaboSolutionsBack1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   // [Authorize(Roles = "Organisateur,Praticien")]
+    [Authorize(Roles = "Organisateur,Praticien")]
     public class PatientController : ControllerBase
     {
         private readonly IPatientService _patientService;

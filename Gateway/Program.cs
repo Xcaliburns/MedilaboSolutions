@@ -13,7 +13,7 @@ builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange
 // Add Ocelot services
 builder.Services.AddOcelot(builder.Configuration);
 
-// Add controller services if necessary
+
 builder.Services.AddControllers();
 
 // Configure JWT authentication
@@ -74,9 +74,6 @@ builder.Logging.AddConsole();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
-//app.UseHttpsRedirection();
-
 app.UseCors("AllowSpecificOrigins");
 
 app.UseAuthentication();
@@ -100,7 +97,6 @@ app.Use(async (context, next) =>
     logger.LogInformation("Finished handling request.");
 });
 
-// Use Ocelot middleware
 await app.UseOcelot();
 
 app.Run();

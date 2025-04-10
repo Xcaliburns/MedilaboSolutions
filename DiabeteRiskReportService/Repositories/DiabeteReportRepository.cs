@@ -32,15 +32,14 @@ namespace DiabeteRiskReportService.Repository
             var response = await _httpClient.GetAsync($"patient/{patientId}");
             if (response.IsSuccessStatusCode)
             {
-                var json = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($" JSON reçu du patient: {json}"); //  Vérification des données
+                var json = await response.Content.ReadAsStringAsync();         
 
 
                 try
                 {
                     var patient = JsonSerializer.Deserialize<PatientDto>(json, new JsonSerializerOptions
                     {
-                        PropertyNameCaseInsensitive = true //  Désérialisation insensible à la casse
+                        PropertyNameCaseInsensitive = true 
                     });
 
                     Console.WriteLine($" Patient correctement désérialisé: {JsonSerializer.Serialize(patient)}");
@@ -67,8 +66,6 @@ namespace DiabeteRiskReportService.Repository
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                // Log or inspect the JSON content here
-                Console.WriteLine(json); // Or use any logging mechanism
                 return JsonSerializer.Deserialize<List<PatientNote>>(json);
             }
             return null;

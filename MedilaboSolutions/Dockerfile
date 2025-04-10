@@ -31,7 +31,6 @@ RUN dotnet tool install -g dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
 
 COPY --from=publish /app/publish .
-COPY ./MedilaboSolutions/certs/cert.pfx /https/cert.pfx
 
 ENV ASPNETCORE_URLS="http://+:8080"
 

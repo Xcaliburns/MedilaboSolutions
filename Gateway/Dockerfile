@@ -20,12 +20,10 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Gateway.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Étape finale avec HTTPS
+# Étape finale 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY ./Gateway/certs/cert.pfx /https/cert.pfx  
-# Ajout du certificat HTTPS
 
 ENV ASPNETCORE_URLS="http://+:5000"
 

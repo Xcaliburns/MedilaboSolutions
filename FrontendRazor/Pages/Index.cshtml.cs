@@ -31,7 +31,8 @@ namespace FrontendRazor.Pages
 
             try
             {
-                Patients = await client.GetFromJsonAsync<List<PatientDto>>("patient"); // Adapter au format attendu
+                var patients = await client.GetFromJsonAsync<List<PatientDto>>("patient");
+                Patients = patients ?? new List<PatientDto>(); 
             }
             catch (HttpRequestException ex)
             {

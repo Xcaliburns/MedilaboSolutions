@@ -18,14 +18,13 @@ namespace DiabeteRiskReportService.Services
         {
             var riskLevel = await GetRiskLevelAsync(patientId, authToken);
 
-            // Create an object to hold the report data
+
             var reportData = new
             {
                 PatientId = patientId,
                 RiskLevel = riskLevel
             };
 
-            // Serialize the report data to JSON
             var jsonReport = JsonSerializer.Serialize(reportData);
 
             return jsonReport;
@@ -33,7 +32,7 @@ namespace DiabeteRiskReportService.Services
 
         public async Task<PatientDto> getPatientAsync(int patientId, string authToken)
         {
-            var patient = await _diabeteReportRepository.GetPatientData(patientId, authToken); //  Assurer que ça retourne PatientDto
+            var patient = await _diabeteReportRepository.GetPatientData(patientId, authToken);
             if (patient != null)
             {
                 Console.WriteLine($"Patient ID: {patientId}, Data retrieved: {JsonSerializer.Serialize(patient)}");
@@ -41,7 +40,7 @@ namespace DiabeteRiskReportService.Services
                 if (patient.DateDeNaissance == default || string.IsNullOrEmpty(patient.Nom) || string.IsNullOrEmpty(patient.Prenom) || string.IsNullOrEmpty(patient.Genre))
                 {
                     Console.WriteLine($"Patient ID: {patientId}, Data is incomplete.");
-                    return null; //  Utiliser 'null' au lieu d'un message texte
+                    return null;
                 }
 
                 return patient;
@@ -74,9 +73,9 @@ namespace DiabeteRiskReportService.Services
 
         public async Task<string> GetRiskLevelAsync(int patientId, string authToken)
         {
-            const string defaultRiskLevel = "None";            
+            const string defaultRiskLevel = "None";
 
-            // Exécution parallèle des deux tâches pour gagner en performances
+
             var triggerTask = getTriggersNumberAsync(patientId, authToken);
             var patientTask = getPatientAsync(patientId, authToken);
 
@@ -84,7 +83,7 @@ namespace DiabeteRiskReportService.Services
 
             int triggerNumber = triggerTask.Result;
             Console.WriteLine($"Patient ID: {patientId}, Triggers count: {triggerNumber}");
-            var patient = patientTask.Result; //  Directement récupérer `PatientDto`
+            var patient = patientTask.Result;
 
             if (patient == null || patient.DateDeNaissance == default || string.IsNullOrEmpty(patient.Nom) || string.IsNullOrEmpty(patient.Prenom) || string.IsNullOrEmpty(patient.Genre))
             {
@@ -92,8 +91,6 @@ namespace DiabeteRiskReportService.Services
                 return defaultRiskLevel;
             }
 
-
-           // var patient = await _diabeteReportRepository.GetPatientData(patientId, authToken);
             int age = DateTime.Now.Year - patient.DateDeNaissance.Year;
             string genre = patient.Genre;
 
@@ -119,7 +116,7 @@ namespace DiabeteRiskReportService.Services
             }
 
             return "None";
-        }     
+        }
 
     }
 }
