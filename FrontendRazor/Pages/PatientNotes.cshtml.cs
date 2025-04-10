@@ -21,7 +21,7 @@ namespace FrontendRazor.Pages
         public List<NoteResponse> Notes { get; set; }
 
         [BindProperty]
-        public Patient Patient { get; set; }
+        public PatientDto Patient { get; set; }
 
         [BindProperty]
         public NoteRequest newNote { get; set; } = new NoteRequest();
@@ -29,22 +29,36 @@ namespace FrontendRazor.Pages
         public async Task OnGetAsync(int id)
         {
             var client = _httpClientFactory.CreateClient("GatewayClient");
+
+            // Récupérer le jeton d'authentification à partir des cookies
             var authToken = HttpContext.Request.Cookies["authToken"];
             if (!string.IsNullOrEmpty(authToken))
             {
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
 
+            try
+            {
+                // Récupération des notes du patient
+                Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"note/patient/{id}");
+                Console.WriteLine($" Requête envoyée : note/patient/{id}");
 
+                // Récupération des informations du patient
+                Patient = await client.GetFromJsonAsync<PatientDto>($"patient/{id}"); //  Assurer que le format attendu est PatientDto
+                Console.WriteLine($" Requête envoyée : patient/{id}");
 
-            Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"note/patient/{id}");
-            Console.WriteLine($"Requête envoyée : note/patient/{id}");
-            Patient = await client.GetFromJsonAsync<Patient>($"patient/{id}");
-            Console.WriteLine($" Requête envoyée : patient/{id}");
-            var riskLevelResponse = await GetPatientRiskLevelAsync(id);
-            ViewData["RiskLevel"] = riskLevelResponse.RiskLevel;
+                // Récupération du niveau de risque du patient
+                var riskLevelResponse = await GetPatientRiskLevelAsync(id);
+                ViewData["RiskLevel"] = riskLevelResponse?.RiskLevel ?? "Inconnu"; //  Gérer le cas où la réponse est nulle
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($" Erreur lors de la récupération des données du patient : {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Impossible de récupérer les données du patient.");
+            }
         }
-           
+
+
 
         public async Task<IActionResult> OnPostAddNoteAsync(NoteRequest newNote) //Attention à ne pas mettre un nom comme OnOstAsync, cela peut creer des ambiguités
         {
@@ -52,7 +66,7 @@ namespace FrontendRazor.Pages
             var authToken = HttpContext.Request.Cookies["authToken"];
 
             if (!string.IsNullOrEmpty(authToken))
-            { 
+            {
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
             var response = await client.PostAsJsonAsync("/api/note", newNote);
@@ -98,7 +112,7 @@ namespace FrontendRazor.Pages
             var response = await client.DeleteAsync($"/api/note/{noteId}");
             if (response.IsSuccessStatusCode)
             {
-               // Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{patientId}");
+                // Notes = await client.GetFromJsonAsync<List<NoteResponse>>($"/note/patient/{patientId}");
 
                 // Recharger les données du patient
                 await OnGetAsync(patientId);
@@ -112,7 +126,7 @@ namespace FrontendRazor.Pages
             }
         }
 
-     
+
 
 
         public IActionResult OnPostRedirectToDonneesPatient(int patientId)

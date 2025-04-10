@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PatientNotes.Interfaces;
 using PatientNotes.Models;
-using PatientNotes.Services;
 
 
 namespace PatientNotes.Controllers
@@ -21,24 +20,6 @@ namespace PatientNotes.Controllers
             _notesService = notesService;
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult<List<Note>>> GetAsync()
-        //{
-        //    var notes = await _notesService.GetAsync();
-        //    return notes;
-        //}
-
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Note>> GetAsync(string id)
-        //{
-        //    var note = await _notesService.GetAsync(id);
-        //    if (note == null)
-        //    {
-        //        return new NotFoundResult();
-        //    }
-        //    return note;
-        //}
-
         [HttpGet("patient/{PatientId}")]
         public async Task<ActionResult<List<Note>>> GetByPatientId(int PatientId)
         {
@@ -50,7 +31,6 @@ namespace PatientNotes.Controllers
                 if (notes == null || notes.Count == 0)
                 {
                     Console.WriteLine($" Aucune note trouvée pour PatientID {PatientId}");
-                    // Retourner une liste vide avec un code 200 OK
                     notes = new List<Note>();
                 }
 

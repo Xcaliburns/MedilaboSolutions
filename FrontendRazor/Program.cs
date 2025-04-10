@@ -17,45 +17,14 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddRazorPages();
 
 
-//builder.Services.AddHttpClient("GatewayClient", client =>
-//{
-//    client.BaseAddress = new Uri("http://gateway:5000/");
-//})
-//.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-//{
-//    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-//});
-
 builder.Services.AddTransient<AuthTokenHandler>();
 
 
 builder.Services.AddHttpClient("GatewayClient", client =>
 {
-    client.BaseAddress = new Uri("http://gateway:5000/");
+    client.BaseAddress = new Uri(builder.Configuration["GatewayUrl"]);
 })
-.AddHttpMessageHandler<AuthTokenHandler>()
-.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-{
-    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-});
-
-
-
-// **Mise à jour de la configuration CORS**
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSpecificOrigins",
-        builder =>
-        {
-            builder.WithOrigins(
-               // "https://localhost:5001",  // Gateway HTTPS
-                "http://localhost:5000"  // Gateway HTTP               
-            )
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();
-        });
-});
+.AddHttpMessageHandler<AuthTokenHandler>();
 
 // Add Cookie Authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -79,7 +48,7 @@ else
     app.UseHsts();
 }
 
-//app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowSpecificOrigins");

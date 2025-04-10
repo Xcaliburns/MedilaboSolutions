@@ -1,13 +1,15 @@
 ﻿using MedilaboSolutionsBack1.Models;
-using System.Collections.Generic;
 
-namespace MedilaboSolutionsBack1.Interfaces
+public interface IPatientRepository
 {
-    public interface IPatientRepository
-    {
-        List<Patient> GetAllPatients();
-        Patient GetPatientById(int id);
-        void UpdatePatient(Patient patient);
-        void CreatePatient(Patient patient); // Ajout de la méthode CreatePatient
-    }
+    List<PatientDto> GetAllPatients();
+    PatientDto GetPatientById(int id);
+    void UpdatePatient(PatientDto patient);
+    void CreatePatient(PatientDto patient);
+
+    // Ajout de la méthode pour créer une adresse
+    void CreateAdresse(Adresse adresse);
+
+    // Une méthode pour récupérer une adresse par son Libellé
+    Adresse GetAdresseByLibele(string libele);
 }

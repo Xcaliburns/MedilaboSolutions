@@ -1,9 +1,6 @@
 ﻿using DiabeteRiskReportService.Interfaces;
 using DiabeteRiskReportService.Models;
-using System.Drawing;
 using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Reflection.Metadata.BlobBuilder;
 
 
 namespace DiabeteRiskReportService.Services
@@ -34,9 +31,9 @@ namespace DiabeteRiskReportService.Services
             return jsonReport;
         }
 
-        public async Task<string> getPatientAsync(int patientId, string authToken)
+        public async Task<PatientDto> getPatientAsync(int patientId, string authToken)
         {
-            var patient = await _diabeteReportRepository.GetPatientData(patientId, authToken);
+            var patient = await _diabeteReportRepository.GetPatientData(patientId, authToken); //  Assurer que ça retourne PatientDto
             if (patient != null)
             {
                 Console.WriteLine($"Patient ID: {patientId}, Data retrieved: {JsonSerializer.Serialize(patient)}");
@@ -44,19 +41,14 @@ namespace DiabeteRiskReportService.Services
                 if (patient.DateDeNaissance == default || string.IsNullOrEmpty(patient.Nom) || string.IsNullOrEmpty(patient.Prenom) || string.IsNullOrEmpty(patient.Genre))
                 {
                     Console.WriteLine($"Patient ID: {patientId}, Data is incomplete.");
-                    return "Patient data is incomplete";
+                    return null; //  Utiliser 'null' au lieu d'un message texte
                 }
 
-                var dateDeNaissance = patient.DateDeNaissance;
-                var age = DateTime.Now.Year - dateDeNaissance.Year;
-                var report = $"Le patient {patient.Nom} {patient.Prenom} a {age} ans et est de sexe {patient.Genre}";
-
-                Console.WriteLine($"Patient ID: {patientId}, Report generated: {report}");
-                return report;
+                return patient;
             }
 
             Console.WriteLine($"Patient ID: {patientId} not found.");
-            return "Patient not found";
+            return null;
         }
 
 
@@ -82,54 +74,52 @@ namespace DiabeteRiskReportService.Services
 
         public async Task<string> GetRiskLevelAsync(int patientId, string authToken)
         {
-            string riskLevel = "None";
-            int triggerNumber = await getTriggersNumberAsync(patientId, authToken);
-            var patientReport = await getPatientAsync(patientId, authToken);
+            const string defaultRiskLevel = "None";            
 
-            if (patientReport != "Patient not found" && patientReport != "Patient data is incomplete")
+            // Exécution parallèle des deux tâches pour gagner en performances
+            var triggerTask = getTriggersNumberAsync(patientId, authToken);
+            var patientTask = getPatientAsync(patientId, authToken);
+
+            await Task.WhenAll(triggerTask, patientTask);
+
+            int triggerNumber = triggerTask.Result;
+            Console.WriteLine($"Patient ID: {patientId}, Triggers count: {triggerNumber}");
+            var patient = patientTask.Result; //  Directement récupérer `PatientDto`
+
+            if (patient == null || patient.DateDeNaissance == default || string.IsNullOrEmpty(patient.Nom) || string.IsNullOrEmpty(patient.Prenom) || string.IsNullOrEmpty(patient.Genre))
             {
-                var patient = await _diabeteReportRepository.GetPatientData(patientId, authToken);
-                int age = DateTime.Now.Year - patient.DateDeNaissance.Year;
-                string genre = patient.Genre;
-
-                Console.WriteLine($"Patient ID: {patientId}, Age: {age}, Genre: {genre}, TriggerNumber: {triggerNumber}");
-
-                if (age > 0)
-                {
-                    if (triggerNumber >= 2 && triggerNumber <= 5 && age > 30)
-                    {
-                        riskLevel = "Borderline";
-                    }
-                    else if (genre == "H" && age <= 30 && triggerNumber >= 3)
-                    {
-                        riskLevel = "In Danger";
-                    }
-                    else if (genre == "F" && age <= 30 && triggerNumber >= 4 && triggerNumber < 7)
-                    {
-                        riskLevel = "In Danger";
-                    }
-                    else if (age > 30 && triggerNumber >= 6 && triggerNumber <= 7)
-                    {
-                        riskLevel = "In Danger";
-                    }
-                    else if (genre == "H" && age <= 30 && triggerNumber >= 5)
-                    {
-                        riskLevel = "Early Onset";
-                    }
-                    else if (genre == "F" && age <= 30 && triggerNumber >= 7)
-                    {
-                        riskLevel = "Early Onset";
-                    }
-                    else if (age > 30 && triggerNumber >= 8)
-                    {
-                        riskLevel = "Early Onset";
-                    }
-                }
+                Console.WriteLine($"Patient ID: {patientId}, Data is incomplete or not found.");
+                return defaultRiskLevel;
             }
 
-            Console.WriteLine($"Patient ID: {patientId}, Final Risk Level: {riskLevel}");
-            return riskLevel;
+
+           // var patient = await _diabeteReportRepository.GetPatientData(patientId, authToken);
+            int age = DateTime.Now.Year - patient.DateDeNaissance.Year;
+            string genre = patient.Genre;
+
+            Console.WriteLine($"Patient ID: {patientId}, Age: {age}, Genre: {genre}, TriggerNumber: {triggerNumber}");
+
+            if (age <= 0) return defaultRiskLevel;
+
+            return DetermineRiskLevel(age, genre, triggerNumber);
         }
+
+        private string DetermineRiskLevel(int age, string genre, int triggerNumber)
+        {
+            if (age > 30)
+            {
+                if (triggerNumber >= 2 && triggerNumber <= 5) return "Borderline";
+                if (triggerNumber >= 6 && triggerNumber <= 7) return "In Danger";
+                if (triggerNumber >= 8) return "Early Onset";
+            }
+            else
+            {
+                if (genre == "H" && triggerNumber >= 3) return triggerNumber >= 5 ? "Early Onset" : "In Danger";
+                if (genre == "F" && triggerNumber >= 4) return triggerNumber >= 7 ? "Early Onset" : "In Danger";
+            }
+
+            return "None";
+        }     
 
     }
 }

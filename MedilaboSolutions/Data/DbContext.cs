@@ -14,6 +14,24 @@ namespace MedilaboSolutionsBack1.Data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder); // Ensure Identity mappings are applied
+
+            modelBuilder.Entity<IdentityUserLogin<string>>()
+                .HasKey(u => new { u.LoginProvider, u.ProviderKey }); // Defining primary key
+
+            modelBuilder.Entity<Patient>()
+                .HasOne(p => p.Adresse)
+                .WithMany(a => a.Patients)
+                .HasForeignKey(p => p.AdresseId)
+                .OnDelete(DeleteBehavior.SetNull);
+        }
+
+
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<Adresse> Adresses { get; set; } // Ajout de la DbSet pour Adress
     }
+
+
 }

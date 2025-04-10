@@ -1,15 +1,13 @@
-﻿using MedilaboSolutionsBack1.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using MedilaboSolutionsBack1.Interfaces;
+﻿using MedilaboSolutionsBack1.Interfaces;
+using MedilaboSolutionsBack1.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MedilaboSolutionsBack1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Organisateur,Praticien")]
+   // [Authorize(Roles = "Organisateur,Praticien")]
     public class PatientController : ControllerBase
     {
         private readonly IPatientService _patientService;
@@ -21,78 +19,56 @@ namespace MedilaboSolutionsBack1.Controllers
 
         // GET: api/Patient
         [HttpGet]
-        public ActionResult<IEnumerable<Patient>> GetAllPatients()
+        public ActionResult<IEnumerable<PatientDto>> GetAllPatients()
         {
-            //retrieve all patients from the database
-            List<Patient> patients = _patientService.GetAllPatients();
-            return Ok(patients);
+            var patientsDto = _patientService.GetAllPatients();
+            return Ok(patientsDto);
         }
+
 
         // GET: api/Patient/5
         [HttpGet("{id}")]
-        public ActionResult<Patient> GetPatientById(int id)
+        public ActionResult<PatientDto> GetPatientById(int id)
         {
-            //retrieve the patient with the given id from the database
-            Patient patient = _patientService.GetPatientById(id);
-            if (patient == null)
-            {
+            var patientDto = _patientService.GetPatientById(id);
+            if (patientDto == null)
                 return NotFound();
-            }
-            return Ok(patient);
+            return Ok(patientDto);
         }
+
+
 
         // POST: api/Patient/Create
         [HttpPost("Create")]
-        public ActionResult Create([FromBody] Patient patient)
+        public ActionResult Create([FromBody] PatientDto patientDto)
         {
             try
             {
-                // Add the patient to the database
-                _patientService.CreatePatient(patient);
-                return Ok(patient);
+                _patientService.CreatePatient(patientDto);
+                return Ok(patientDto);
             }
             catch
             {
                 return BadRequest();
             }
         }
+
 
         // PUT: api/Patient/Edit/5   
         [HttpPut("Edit/{id}")]
-        public ActionResult Edit(int id, [FromBody] Patient updatedPatient)
+        public ActionResult Edit(int id, [FromBody] PatientDto updatedPatientDto)
         {
-            try
-            {
-                // Validate that the ID in the URL matches the ID in the request body
-                if (id != updatedPatient.Id)
-                {
-                    return BadRequest("ID in URL does not match ID in request body");
-                }
+            if (id != updatedPatientDto.Id)
+                return BadRequest("ID mismatch");
 
-                // Retrieve the patient with the given id from the database
-                Patient patient = _patientService.GetPatientById(id);
-                if (patient == null)
-                {
-                    return NotFound();
-                }
+            var patient = _patientService.GetPatientById(id);
+            if (patient == null)
+                return NotFound();
 
-                // Update patient properties based on the provided model
-                patient.Nom = updatedPatient.Nom;
-                patient.Prenom = updatedPatient.Prenom;
-                patient.DateDeNaissance = updatedPatient.DateDeNaissance;
-                patient.Genre = updatedPatient.Genre;
-                patient.Adresse = updatedPatient.Adresse;
-                patient.Telephone = updatedPatient.Telephone;
-
-                // Update the patient in the database
-                _patientService.UpdatePatient(patient);
-
-                return NoContent();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            _patientService.UpdatePatient(updatedPatientDto);
+            return NoContent();
         }
+
     }
 }
+

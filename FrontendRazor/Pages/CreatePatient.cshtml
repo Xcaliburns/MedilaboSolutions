@@ -6,22 +6,22 @@
 
 <h2>Créer un nouveau patient</h2>
 <div class="form-container">
-<form method="post">
-    <div class="form-group">
-        <label asp-for="Patient.Nom"></label>
-        <input asp-for="Patient.Nom" class="form-control" />
-        <span asp-validation-for="Patient.Nom" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Patient.Prenom"></label>
-        <input asp-for="Patient.Prenom" class="form-control" />
-        <span asp-validation-for="Patient.Prenom" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Patient.DateDeNaissance"></label>
-        <input asp-for="Patient.DateDeNaissance" class="form-control" />
-        <span asp-validation-for="Patient.DateDeNaissance" class="text-danger"></span>
-    </div>
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="Patient.Nom"></label>
+            <input asp-for="Patient.Nom" class="form-control" />
+            <span asp-validation-for="Patient.Nom" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Patient.Prenom"></label>
+            <input asp-for="Patient.Prenom" class="form-control" />
+            <span asp-validation-for="Patient.Prenom" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Patient.DateDeNaissance"></label>
+            <input asp-for="Patient.DateDeNaissance" class="form-control" />
+            <span asp-validation-for="Patient.DateDeNaissance" class="text-danger"></span>
+        </div>
         <div class="form-group">
             <label asp-for="Patient.Genre"></label>
             <select asp-for="Patient.Genre" class="form-control">
@@ -31,18 +31,19 @@
             </select>
             <span asp-validation-for="Patient.Genre" class="text-danger"></span>
         </div>
-    <div class="form-group">
-        <label asp-for="Patient.Adresse"></label>
-        <input asp-for="Patient.Adresse" class="form-control" />
-        <span asp-validation-for="Patient.Adresse" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Patient.Telephone"></label>
-        <input asp-for="Patient.Telephone" class="form-control" />
-        <span asp-validation-for="Patient.Telephone" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Enregistrer</button>
-</form>
+        <div class="form-group">
+            <label asp-for="Patient.Adresse.Libele"></label> <!-- Ajustement -->
+            <input asp-for="Patient.Adresse.Libele" class="form-control" />
+            <span asp-validation-for="Patient.Adresse.Libele" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Patient.Telephone"></label>
+            <input asp-for="Patient.Telephone" class="form-control" />
+            <span asp-validation-for="Patient.Telephone" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </form>
 </div>
 
 @section Scripts {

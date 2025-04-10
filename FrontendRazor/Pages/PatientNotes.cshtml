@@ -15,7 +15,7 @@
         <p><strong>Genre:</strong> @Model.Patient.Genre</p>
         <p><strong>Date de naissance:</strong> @Model.Patient.DateDeNaissance.ToShortDateString()</p>
         <p><strong>Téléphone:</strong> @Model.Patient.Telephone</p>
-        <p><strong>Adresse:</strong> @Model.Patient.Adresse</p>
+        <p><strong>Adresse:</strong> @(Model.Patient.Adresse?.Libele ?? "Non spécifiée")</p>
         <form method="post" asp-page-handler="RedirectToDonneesPatient">
             <input type="hidden" name="patientId" value="@Model.Patient.Id" />
             <button type="submit" class="btn mt-5 btn-update">Mise à jour</button>
@@ -48,7 +48,6 @@
     </div>
 
     <hr /> <!-- Trait de séparation -->
-
     <!-- Section pour ajouter une nouvelle note -->
     <div class="add-note">
         <h3>Ajouter une nouvelle note</h3>

@@ -17,26 +17,26 @@ namespace FrontendRazor.Pages
         }
 
         [BindProperty]
-        public Patient Patient { get; set; }
+        public PatientDto Patient { get; set; } //  Utilisation de PatientDto
+
 
         public async Task OnGetAsync(int id)
         {
             var client = _httpClientFactory.CreateClient("GatewayClient");
 
-            // Récupérer le jeton d'authentification à partir des cookies
             var authToken = HttpContext.Request.Cookies["authToken"];
             if (!string.IsNullOrEmpty(authToken))
             {
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             }
 
-            Patient = await client.GetFromJsonAsync<Patient>($"patient/{id}");
-         
+            Patient = await client.GetFromJsonAsync<PatientDto>($"patient/{id}"); //  Adapter au format attendu
         }
+
 
         public async Task<IActionResult> OnPostAsync()
         {
-           
+
             if (!ModelState.IsValid)
             {
                 System.Diagnostics.Debug.WriteLine("ModelState is not valid");
