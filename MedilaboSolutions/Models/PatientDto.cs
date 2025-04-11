@@ -7,12 +7,12 @@
         public string Prenom { get; set; }
         public DateTime DateDeNaissance { get; set; }
         public string Genre { get; set; }
-        public string Telephone { get; set; }
+        public string? Telephone { get; set; }
         public AdresseDto? Adresse { get; set; } 
     }
 
     public class AdresseDto
     {
-        public string Libele { get; set; }
+        public string? Libele { get; set; }
     }
 }

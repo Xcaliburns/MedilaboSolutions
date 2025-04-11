@@ -57,8 +57,7 @@ namespace DiabeteRiskReportService.Services
             var triggersToCheck = new List<string> { "Hémoglobine A1C", "Microalbumine", "Taille", "Poids", "Fumeur", "Fumeuse", "Anormal", "Cholestérol", "Vertiges", "Rechute", "Réaction", "Anticorps" };
 
             if (triggerList == null || triggerList.Count == 0)
-            {
-                Console.WriteLine($"Patient ID: {patientId}, Trigger list is empty.");
+            {               
                 return 0;
             }
 
@@ -66,7 +65,7 @@ namespace DiabeteRiskReportService.Services
                 .SelectMany(note => triggersToCheck, (note, trigger) => new { note, trigger })
                 .Count(x => x.note.Note.Contains(x.trigger, StringComparison.OrdinalIgnoreCase));
 
-            Console.WriteLine($"Patient ID: {patientId}, TriggerNumber calculated: {triggerNumber}");
+           
             return triggerNumber;
         }
 
@@ -82,12 +81,12 @@ namespace DiabeteRiskReportService.Services
             await Task.WhenAll(triggerTask, patientTask);
 
             int triggerNumber = triggerTask.Result;
-            Console.WriteLine($"Patient ID: {patientId}, Triggers count: {triggerNumber}");
+            
             var patient = patientTask.Result;
 
             if (patient == null || patient.DateDeNaissance == default || string.IsNullOrEmpty(patient.Nom) || string.IsNullOrEmpty(patient.Prenom) || string.IsNullOrEmpty(patient.Genre))
             {
-                Console.WriteLine($"Patient ID: {patientId}, Data is incomplete or not found.");
+                
                 return defaultRiskLevel;
             }
 
