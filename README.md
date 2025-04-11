@@ -9,10 +9,12 @@ Ce projet développé avec **.NET** implémente une solution en microservices po
 - **Architecture** : Microservices avec Ocelot Gateway
 - **Conteneurs** : Docker
 
-#### 1. **Cloner le projet**
-Avant de pouvoir lancer le projet, il faut récupérer les fichiers sources en clonant le dépôt GitHub. Utilisez la commande suivante dans votre terminal :
-git clone https://github.com/Xcaliburns/MedilaboSolutions.git
-cd MedilaboSolutions
+#### 1. **Cloner le projet et éxecuter la solution**
+- Avant de pouvoir lancer le projet, il faut récupérer les fichiers sources en clonant le dépôt GitHub. Utilisez la commande suivante dans votre terminal :
+- git clone https://github.com/Xcaliburns/MedilaboSolutions.git
+- se placer au niveau de la racine du projet : cd MedilaboSolutions
+- effectuer la commande : docker-compose up --build
+
 
 ## 🌱 Recommandations Green Code
 
