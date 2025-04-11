@@ -23,14 +23,16 @@ Ce projet développé avec **.NET** implémente une solution en microservices po
 
 ## 🌱 Recommandations Green Code
 
-### 🛠 Optimisation du Code  à envisager
+### 🛠 Optimisation du Code à envisager
 - Réduction de la complexité des algorithmes pour limiter les cycles CPU.
 - Utilisation d'un système de cache (**MemoryCache**, **Redis**) pour minimiser les accès à la base de données.
-- Chargement des données avec **lazy loading** pour éviter la surcharge mémoire.
+- Chargement des données avec **lazy loading** pour éviter la surcharge mémoire, utile pour les relations rarement consultées.
+- Utilisation du **eager loading** pour optimiser les performances en cas de relations fréquemment utilisées, en chargeant toutes les données nécessaires en une seule requête.
 
 ### 🛠 Optimisation du Code effectuées
 - ajout d'une options de configuration de cache dans le gateway pour limiter les appels aux bases de données pour des requetes identiques
- "CacheOptions": { "TtlSeconds": 120 }  
+ "CacheOptions": { "TtlSeconds": 120 }
+- Utilisation du **eager loading** (via `.Include()` dans Entity Framework) pour charger les données associées en une seule requête, évitant les N+1 requêtes et optimisant les performances.
 
 ### 🐳 Conteneurs Docker
 - Utiliser des images Docker légères comme **mcr.microsoft.com/dotnet/runtime:8.0-alpine**(quand cela est possible)
