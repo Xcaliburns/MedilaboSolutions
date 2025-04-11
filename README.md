@@ -21,7 +21,7 @@ cd MedilaboSolutions
 - Utilisation d'un système de cache (**MemoryCache**, **Redis**) pour minimiser les accès à la base de données.
 - Chargement des données avec **lazy loading** pour éviter la surcharge mémoire.
 
-  ### 🛠 Optimisation du Code effectuées
+### 🛠 Optimisation du Code effectuées
 - ajout d'une options de configuration de cache dans le gateway pour limiter les appels aux bases de données pour des requetes identiques
  "CacheOptions": { "TtlSeconds": 120 }  
 
