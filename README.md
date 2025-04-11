@@ -11,8 +11,9 @@ Ce projet développé avec **.NET** implémente une solution en microservices po
 
 #### 1. **Cloner le projet et éxecuter la solution**
 - Avant de pouvoir lancer le projet, il faut récupérer les fichiers sources en clonant le dépôt GitHub. Utilisez la commande suivante dans votre terminal :
-- git clone https://github.com/Xcaliburns/MedilaboSolutions.git
+- git clone https://github.com/Xcaliburns/MedilaboSolutions.git 
 - se placer au niveau de la racine du projet : cd MedilaboSolutions
+- git checkout dev (la branche dev est la branche fonctionnelle pour le moment)
 - effectuer la commande : docker-compose up --build
 
 
