@@ -1,4 +1,4 @@
-# MedilaboSolutionsBack1
+# MedilaboSolutions
 
 ## 📝 Description
 Ce projet développé avec **.NET** implémente une solution en microservices pour la gestion de patients et calcul de risques pour le diabete
