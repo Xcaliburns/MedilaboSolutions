@@ -25,12 +25,12 @@ namespace FrontendRazor.Models
         public string Genre { get; set; }
 
         [StringLength(50)]
-        public string Telephone { get; set; }
+        public string? Telephone { get; set; }
         public AdresseDto? Adresse { get; set; }
     }
 
     public class AdresseDto
     {
-        public string Libele { get; set; }
+        public string? Libele { get; set; }
     }
 }

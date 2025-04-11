@@ -1,8 +1,7 @@
-using PatientNotes.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System.Collections.Generic;
 using PatientNotes.Interfaces;
+using PatientNotes.Models;
 
 
 namespace PatientNotes.Repository;
@@ -43,32 +42,18 @@ public class NotesRepository : INotesRepository
             Console.WriteLine($" Recherche des notes pour PatientID {patientId}...");
             var result = await _notesCollection.Find(x => x.PatientId == patientId).ToListAsync();
 
-            if (result == null || result.Count == 0)
-            {
-                Console.WriteLine($" Aucune note trouvée pour PatientID {patientId} !");
-            }
-            else
-            {
-                Console.WriteLine($" Notes trouvées: {result.Count} notes récupérées.");
-            }
-
             return result;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($" Erreur MongoDB lors de la récupération des notes: {ex.Message}");
-            throw;
+           throw;
         }
     }
 
     // ajouter une note
     public async Task CreateAsync(Note newNote) =>
         await _notesCollection.InsertOneAsync(newNote);
-
-    // modifier une note
-    public async Task UpdateAsync(string id, Note updatedNote) =>
-        await _notesCollection.ReplaceOneAsync(x => x._id == id, updatedNote);
-
+    
     // supprimer une note
     public async Task RemoveAsync(string id) =>
         await _notesCollection.DeleteOneAsync(x => x._id == id);

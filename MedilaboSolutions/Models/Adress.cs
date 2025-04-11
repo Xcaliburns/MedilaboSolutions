@@ -5,6 +5,6 @@
         public int Id { get; set; }
         public string? Libele { get; set; }
 
-        public ICollection<Patient>? Patients { get; set; } // Navigation property
+        public ICollection<Patient>? Patients { get; set; } 
     }
 }

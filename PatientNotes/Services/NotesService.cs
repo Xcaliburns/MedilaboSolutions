@@ -1,7 +1,5 @@
-using PatientNotes.Models;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
 using PatientNotes.Interfaces;
+using PatientNotes.Models;
 
 namespace PatientNotes.Services;
 
@@ -30,9 +28,7 @@ public class NotesService : INotesService
     public async Task CreateAsync(Note newNote) =>
         await _notesRepository.CreateAsync(newNote);
 
-    // modifier une note
-    public async Task UpdateAsync(string id, Note updatedNote) =>
-        await _notesRepository.UpdateAsync(id, updatedNote);
+   
 
     // supprimer une note
     public async Task RemoveAsync(string id) =>

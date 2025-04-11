@@ -93,12 +93,17 @@ namespace MedilaboSolutionsBack1.Repositories
                 Nom = patientDto.Nom,
                 Prenom = patientDto.Prenom,
                 Genre = patientDto.Genre,
-                DateDeNaissance = patientDto.DateDeNaissance,
-                Telephone = patientDto.Telephone
+                DateDeNaissance = patientDto.DateDeNaissance
             };
 
+            // Ajouter le téléphone uniquement s'il est fourni
+            if (!string.IsNullOrEmpty(patientDto.Telephone))
+            {
+                patient.Telephone = patientDto.Telephone;
+            }
+
             // Vérifier si l'adresse existe avant de l'ajouter
-            if (patientDto.Adresse != null)
+            if (patientDto.Adresse != null && !string.IsNullOrEmpty(patientDto.Adresse.Libele))
             {
                 var existingAdresse = _context.Adresses.FirstOrDefault(a => a.Libele == patientDto.Adresse.Libele);
                 if (existingAdresse != null)
@@ -117,6 +122,9 @@ namespace MedilaboSolutionsBack1.Repositories
             _context.Patients.Add(patient);
             _context.SaveChanges();
         }
+
+
+       
 
 
         public void CreateAdresse(Adresse adresse)

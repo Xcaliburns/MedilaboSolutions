@@ -75,34 +75,42 @@ namespace MedilaboSolutionsBack1.Services
         }
 
 
-        public void CreatePatient(PatientDto patientDto)
+      public void CreatePatient(PatientDto patientDto)
+{
+    var patient = new Patient
+    {
+        Nom = patientDto.Nom,
+        Prenom = patientDto.Prenom,
+        Genre = patientDto.Genre,
+        DateDeNaissance = patientDto.DateDeNaissance
+    };
+
+    // Ajout du téléphone uniquement s'il est fourni
+    if (!string.IsNullOrEmpty(patientDto.Telephone))
+    {
+        patient.Telephone = patientDto.Telephone;
+    }
+
+    // Gestion de l'adresse uniquement si elle est fournie
+    if (patientDto.Adresse != null && !string.IsNullOrEmpty(patientDto.Adresse.Libele))
+    {
+        var existingAdresse = _patientRepository.GetAdresseByLibele(patientDto.Adresse.Libele);
+        if (existingAdresse != null)
         {
-            var patient = new Patient
-            {
-                Nom = patientDto.Nom,
-                Prenom = patientDto.Prenom,
-                Genre = patientDto.Genre,
-                DateDeNaissance = patientDto.DateDeNaissance,
-                Telephone = patientDto.Telephone
-            };
-
-            if (patientDto.Adresse != null)
-            {
-                var existingAdresse = _patientRepository.GetAdresseByLibele(patientDto.Adresse.Libele);
-                if (existingAdresse != null)
-                {
-                    patient.AdresseId = existingAdresse.Id;
-                }
-                else
-                {
-                    var newAdresse = new Adresse { Libele = patientDto.Adresse.Libele };
-                    _patientRepository.CreateAdresse(newAdresse);
-                    patient.AdresseId = newAdresse.Id;
-                }
-            }
-
-            _patientRepository.CreatePatient(patientDto);
+            patient.AdresseId = existingAdresse.Id;
         }
+        else
+        {
+            var newAdresse = new Adresse { Libele = patientDto.Adresse.Libele };
+            _patientRepository.CreateAdresse(newAdresse);
+            patient.AdresseId = newAdresse.Id;
+        }
+    }
+
+    // Création du patient via le repository
+    _patientRepository.CreatePatient(patientDto);
+}
+
 
     }
 }

@@ -28,7 +28,7 @@ namespace MedilaboSolutionsBack1.Data
                 Prenom = "Test",
                 Nom = "TestBorderline",
                 DateDeNaissance = new DateTime(1945, 06, 24),
-                Genre = "M",
+                Genre = "H",
                 Adresse = new Adresse{Libele="2 High St"},
                 Telephone = "200-333-4444"
             },
@@ -37,7 +37,7 @@ namespace MedilaboSolutionsBack1.Data
                 Prenom = "Test",
                 Nom = "TestInDanger",
                 DateDeNaissance = new DateTime(2004, 06, 18),
-                Genre = "M",
+                Genre = "H",
                 Adresse = new Adresse{Libele="3 Club Road"},
                 Telephone = "300-444-5555"
             },
