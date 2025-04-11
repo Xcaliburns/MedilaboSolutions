@@ -17,12 +17,11 @@ RUN dotnet build "./PatientNotes.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "./PatientNotes.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Étape finale avec HTTPS
+# Étape finale 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY ./PatientNotes/certs/cert.pfx /https/cert.pfx  
-# Certificat HTTPS partagé
+
 
 ENV ASPNETCORE_URLS="http://+:8090"
 

@@ -32,7 +32,7 @@ namespace MedilaboSolutionsBack1.Repositories
         }
 
 
-        public PatientDto GetPatientById(int id)
+        public PatientDto? GetPatientById(int id) 
         {
             var patient = _context.Patients.Include(p => p.Adresse).FirstOrDefault(p => p.Id == id);
 

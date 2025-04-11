@@ -27,7 +27,7 @@ namespace DiabeteRiskReportService.Models
         [JsonPropertyName("genre")]
         public string Genre { get; set; }
 
-        [StringLength(50)]
+        
         [JsonPropertyName("adresse")]
         public string? Adresse { get; set; }
 

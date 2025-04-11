@@ -44,7 +44,7 @@ public class CreatePatientModel : PageModel
             return RedirectToLogin();
         }
 
-        var response = await client.PostAsJsonAsync("patient/create", Patient); //  Assurer que PatientDto est bien envoyé
+        var response = await client.PostAsJsonAsync("patient/create", Patient); 
 
         if (response.IsSuccessStatusCode)
         {

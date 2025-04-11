@@ -9,7 +9,7 @@ public static class MongoDbInitializer
 
         try
         {
-            // Vérifier si la collection est vide avant d'insérer les données de test
+            
             if (notesCollection.CountDocuments(_ => true) == 0)
             {
                 var testNotes = new List<Note>

@@ -45,16 +45,16 @@ namespace MedilaboSolutionsBack1.Controllers
             {
                 var token = GenerateJwtToken(user);
 
-                // Configurez les options du cookie
+                // Configuration des options du cookie
                 var cookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = true, // Assurez-vous que le cookie est sécurisé
-                    SameSite = SameSiteMode.Lax, // Utilisez Lax pour permettre les requêtes cross-site
-                    Expires = DateTime.UtcNow.AddHours(2) // Définissez l'expiration selon vos besoins
+                    Secure = true, 
+                    SameSite = SameSiteMode.Lax, 
+                    Expires = DateTime.UtcNow.AddHours(2) 
                 };
 
-                // Ajoutez le cookie à la réponse
+                // Ajout le cookie à la réponse
                 HttpContext.Response.Cookies.Append("authToken", token, cookieOptions);
 
                 // Inclure le token dans la réponse
@@ -83,7 +83,7 @@ namespace MedilaboSolutionsBack1.Controllers
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            // Add roles to the claims
+            // Attribution des roles 
             var roles = _userManager.GetRolesAsync(user).Result;
             _logger.LogInformation("Roles retrieved for user {UserName}: {Roles}", user.UserName, string.Join(", ", roles));
             claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));

@@ -25,12 +25,10 @@ namespace PatientNotes.Controllers
         {
             try
             {
-                Console.WriteLine($" Requête reçue pour PatientID: {PatientId}");
                 var notes = await _notesService.GetByPatientId(PatientId);
 
                 if (notes == null || notes.Count == 0)
                 {
-                    Console.WriteLine($" Aucune note trouvée pour PatientID {PatientId}");
                     notes = new List<Note>();
                 }
 
@@ -39,12 +37,11 @@ namespace PatientNotes.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($" Erreur API PatientNotes: {ex.Message}");
                 return StatusCode(500, $"Erreur interne du serveur : {ex.Message}");
             }
         }
 
-        // ajouter une note
+        
         [HttpPost]
         public async Task<ActionResult<Note>> CreateAsync(NoteRequest newNoteRequest)
         {

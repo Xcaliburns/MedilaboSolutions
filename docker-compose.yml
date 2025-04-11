@@ -119,7 +119,7 @@ services:
     networks:
       - medilabonet
 
-      ## Frontend Razor
+## Frontend Razor
   frontendrazor:
     image: frontendrazor:latest
     build:
@@ -136,7 +136,7 @@ services:
     networks:
       - medilabonet
 
-      ##volumes
+##volumes
 volumes:
   sqlserver_data:
   mongo_data:

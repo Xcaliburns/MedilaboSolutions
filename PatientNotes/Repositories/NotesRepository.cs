@@ -61,7 +61,6 @@ public class NotesRepository : INotesRepository
         }
     }
 
-
     // ajouter une note
     public async Task CreateAsync(Note newNote) =>
         await _notesCollection.InsertOneAsync(newNote);

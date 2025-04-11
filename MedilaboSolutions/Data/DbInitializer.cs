@@ -6,10 +6,10 @@ namespace MedilaboSolutionsBack1.Data
     {
         public static void Initialize(ApplicationDbContext context)
         {
-            // Vérifie si la table Patients contient des données
+            
             if (context.Patients.Any())
             {
-                return; // La base de données est déjà initialisée
+                return; 
             }
 
             var patients = new Patient[]

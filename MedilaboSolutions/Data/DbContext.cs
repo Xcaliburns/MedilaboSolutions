@@ -16,10 +16,10 @@ namespace MedilaboSolutionsBack1.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder); // Ensure Identity mappings are applied
+            base.OnModelCreating(modelBuilder); 
 
             modelBuilder.Entity<IdentityUserLogin<string>>()
-                .HasKey(u => new { u.LoginProvider, u.ProviderKey }); // Defining primary key
+                .HasKey(u => new { u.LoginProvider, u.ProviderKey }); 
 
             modelBuilder.Entity<Patient>()
                 .HasOne(p => p.Adresse)
@@ -30,7 +30,7 @@ namespace MedilaboSolutionsBack1.Data
 
 
         public DbSet<Patient> Patients { get; set; }
-        public DbSet<Adresse> Adresses { get; set; } // Ajout de la DbSet pour Adress
+        public DbSet<Adresse> Adresses { get; set; } 
     }
 
 
