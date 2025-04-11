@@ -24,8 +24,7 @@ RUN dotnet publish "./DiabeteRiskReportService.csproj" -c $BUILD_CONFIGURATION -
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY ./DiabeteRiskReportService/certs/cert.pfx /https/cert.pfx  
-# Copie du certificat HTTPS dans le conteneur
+
 
 ENV ASPNETCORE_URLS="http://+:5020"
 

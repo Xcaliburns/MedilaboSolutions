@@ -1,6 +1,4 @@
-﻿using MedilaboSolutionsBack1.Models;
-
-namespace MedilaboSolutionsBack1.Models
+﻿namespace MedilaboSolutionsBack1.Models
 {
     public class Adresse
     {
