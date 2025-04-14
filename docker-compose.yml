@@ -39,7 +39,7 @@ services:
     image: patientservice:latest
     build:
       context: .
-      dockerfile: MedilaboSolutions/Dockerfile
+      dockerfile: PatientService/Dockerfile
     ports:
       - "8080:8080"
       
