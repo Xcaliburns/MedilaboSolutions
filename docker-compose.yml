@@ -1,0 +1,148 @@
+version: '3.8'
+
+
+
+services:
+
+## SQL Server
+  sqlserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.sqlserver
+    container_name: sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      ACCEPT_EULA: "Y"
+    restart: always
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - medilabonet
+## MongoDB
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: YourStrongPassword
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - medilabonet
+
+## Patient Service
+  patientservice:
+    image: patientservice:latest
+    build:
+      context: .
+      dockerfile: MedilaboSolutions/Dockerfile
+    ports:
+      - "8080:8080"
+      
+    environment:  
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JwtSettings__Issuer=YourIssuer
+      - JwtSettings__Audience=YourAudience
+      - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=PatientDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True
+    depends_on:
+      - sqlserver  
+    networks:
+      - medilabonet
+## Patient Notes Service
+  patientnotes:
+    image: patientnotes:latest
+    build:
+      context: .
+      dockerfile: PatientNotes/Dockerfile
+    ports:
+      - "8090:8090"
+      
+    environment:
+      - MedilaboNotesData__ConnectionString=mongodb://root:YourStrongPassword@mongodb:27017/?authSource=admin
+      - MedilaboNotesData__DatabaseName=MedilaboNotesData
+      - MedilaboNotesData__CollectionName=PatientNotes
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JwtSettings__Issuer=YourIssuer
+      - JwtSettings__Audience=YourAudience
+      - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
+    depends_on:
+      - mongodb
+    networks:
+      - medilabonet
+
+## Gateway
+  gateway:
+    image: gateway:latest
+    build:
+      context: .
+      dockerfile: Gateway/Dockerfile
+    ports:
+      - "5000:5000"
+      
+    environment: 
+        - ASPNETCORE_ENVIRONMENT=Development
+        - JwtSettings__Issuer=YourIssuer
+        - JwtSettings__Audience=YourAudience
+        - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
+        
+    depends_on:
+      - patientservice
+      - patientnotes
+    networks:
+      - medilabonet
+
+## Diabete Risk Report Service
+  diabeteriskreportservice:
+    image: diabeteriskreportservice:latest
+    build:
+      context: .
+      dockerfile: DiabeteRiskReportService/Dockerfile
+    ports:
+      - "5020:5020"
+      
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JwtSettings__Issuer=YourIssuer
+      - JwtSettings__Audience=YourAudience
+      - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
+      - GatewayUrl=http://gateway:5000/
+    
+    depends_on:
+      - gateway
+      - patientservice
+      - patientnotes 
+    networks:
+      - medilabonet
+
+## Frontend Razor
+  frontendrazor:
+    image: frontendrazor:latest
+    build:
+      context: .
+      dockerfile: FrontendRazor/Dockerfile
+    ports:
+      - "5010:5010"
+      
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - GatewayUrl=http://gateway:5000
+    depends_on:
+      - gateway
+    networks:
+      - medilabonet
+
+##volumes
+volumes:
+  sqlserver_data:
+  mongo_data:
+
+  ##networks
+networks:
+  medilabonet:
+    name: medilabonet
+    driver: bridge

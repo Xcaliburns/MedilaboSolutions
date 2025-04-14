@@ -1,95 +1,132 @@
 {
   "Routes": [
+
     {
-      "DownstreamPathTemplate": "/api/Patient/{id}",
-      "DownstreamScheme": "https",
+      "UpstreamPathTemplate": "/auth/login",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/auth/login",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7088
+          "Host": "patientservice",
+          "Port": 8080
+        }
+      ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Patient/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "patientservice",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/patient/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "POST", "DELETE" ],
+      "UpstreamHttpMethod": [ "GET", "PUT", "POST" ],
+      "CacheOptions": {
+        "TtlSeconds": 120
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/Patient",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7088
+         "AllowedScopes": []
         }
-      ],
-      "UpstreamPathTemplate": "/patient",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/Patient/Edit/{id}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
+      },
+      {
+        "DownstreamPathTemplate": "/api/Patient",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "patientservice",
+            "Port": 8080
+          }
+        ],
+        "UpstreamPathTemplate": "/patient",
+        "UpstreamHttpMethod": [ "GET" ],
+        "CacheOptions": {
+          "TtlSeconds": 120
+        },
+        "AuthenticationOptions": {
+           "AuthenticationProviderKey": "Bearer",
+           "AllowedScopes": []
+         }
+       },
         {
-          "Host": "localhost",
-          "Port": 7088
-        }
-      ],
-      "UpstreamPathTemplate": "/patient/edit/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/Create",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7088
-        }
-      ],
-      "UpstreamPathTemplate": "/patient/create",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/Auth/login",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7088
-        }
-      ],
-      "UpstreamPathTemplate": "/auth/login",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Auth/logout",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7088
-        }
-      ],
-      "UpstreamPathTemplate": "/auth/logout",
-      "UpstreamHttpMethod": [ "POST" ]
-    }   
+          "DownstreamPathTemplate": "/api/Note",
+          "DownstreamScheme": "http",
+          "DownstreamHostAndPorts": [
+            {
+              "Host": "patientnotes",
+              "Port": 8090
+            }
+          ],
+          "UpstreamPathTemplate": "/api/note",
+          "UpstreamHttpMethod": [ "GET", "POST" ],
+          "CacheOptions": {
+            "TtlSeconds": 120
+          },
+            "AuthenticationOptions": {
+              "AuthenticationProviderKey": "Bearer",
+              "AllowedScopes": []
+            }
+          },
+          {
+            "DownstreamPathTemplate": "/api/note/patient/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+              {
+                "Host": "patientnotes",
+                "Port": 8090
+              }
+            ],
+            "UpstreamPathTemplate": "/note/patient/{id}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "CacheOptions": {
+              "TtlSeconds": 120
+            },
+              "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+              }
+            },
+            {
+              "DownstreamPathTemplate": "/api/Note/{id}",
+              "DownstreamScheme": "http",
+              "DownstreamHostAndPorts": [
+                {
+                  "Host": "patientnotes",
+                  "Port": 8090
+                }
+              ],
+              "UpstreamPathTemplate": "/api/note/{id}",
+              "UpstreamHttpMethod": [ "DELETE" ],
+              "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+              }
+            },
+            {
+              "DownstreamPathTemplate": "/api/DiabeteReport/Report/{patientId}",
+              "DownstreamScheme": "http",
+              "DownstreamHostAndPorts": [
+                {
+                  "Host": "diabeteriskreportservice",
+                  "Port": 5020
+                }
+              ],
+              "UpstreamPathTemplate": "/report/{patientId}",
+              "UpstreamHttpMethod": [ "GET" ],
+              "CacheOptions": {
+                "TtlSeconds": 120
+              },
+                "AuthenticationOptions": {
+                  "AuthenticationProviderKey": "Bearer",
+                  "AllowedScopes": []
+                }
+              }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7214"
+    "BaseUrl": "http://gateway:5000"
   }
 }

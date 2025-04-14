@@ -6,10 +6,10 @@ namespace MedilaboSolutionsBack1.Data
     {
         public static void Initialize(ApplicationDbContext context)
         {
-            // Vérifie si la table Patients contient des données
+            
             if (context.Patients.Any())
             {
-                return; // La base de données est déjà initialisée
+                return; 
             }
 
             var patients = new Patient[]
@@ -20,7 +20,7 @@ namespace MedilaboSolutionsBack1.Data
                 Nom = "TestNone",
                 DateDeNaissance = new DateTime(1966, 12, 31),
                 Genre = "F",
-                Adresse = "1 Brookside St",
+                Adresse = new Adresse{Libele="234 rue de la saucisse"},
                 Telephone = "100-222-3333"
             },
             new Patient
@@ -28,8 +28,8 @@ namespace MedilaboSolutionsBack1.Data
                 Prenom = "Test",
                 Nom = "TestBorderline",
                 DateDeNaissance = new DateTime(1945, 06, 24),
-                Genre = "M",
-                Adresse = "2 High St",
+                Genre = "H",
+                Adresse = new Adresse{Libele="2 High St"},
                 Telephone = "200-333-4444"
             },
             new Patient
@@ -37,8 +37,8 @@ namespace MedilaboSolutionsBack1.Data
                 Prenom = "Test",
                 Nom = "TestInDanger",
                 DateDeNaissance = new DateTime(2004, 06, 18),
-                Genre = "M",
-                Adresse = "3 Club Road",
+                Genre = "H",
+                Adresse = new Adresse{Libele="3 Club Road"},
                 Telephone = "300-444-5555"
             },
             new Patient
@@ -47,7 +47,7 @@ namespace MedilaboSolutionsBack1.Data
                 Nom = "TestEarlyOnset",
                 DateDeNaissance = new DateTime(2002, 06, 28),
                 Genre = "F",
-                Adresse = "4 Valley Dr",
+                Adresse = new Adresse{Libele="4 Valley Dr"},
                 Telephone = "400-555-6666"
             }
             };

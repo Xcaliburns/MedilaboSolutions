@@ -1,74 +1,66 @@
+namespace FrontendRazor.Pages;
 using FrontendRazor.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
 
-namespace FrontendRazor.Pages
+public class CreatePatientModel : PageModel
 {
-    [Authorize(Roles = "Organisateur, Praticien")]
-    public class CreatePatientModel : PageModel
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public CreatePatientModel(IHttpClientFactory httpClientFactory)
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        _httpClientFactory = httpClientFactory;
+    }
 
-        public CreatePatientModel(IHttpClientFactory httpClientFactory)
+    [BindProperty]
+    public PatientDto Patient { get; set; } = new PatientDto(); 
+
+    public IActionResult OnGet()
+    {
+        var authToken = HttpContext.Request.Cookies["authToken"];
+        if (string.IsNullOrEmpty(authToken))
         {
-            _httpClientFactory = httpClientFactory;
+            return RedirectToLogin();
         }
 
-        [BindProperty]
-        public Patient Patient { get; set; } = new Patient();
+        return Page();
+    }
 
-        public IActionResult OnGet()
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid)
         {
-            // Récupérer le jeton d'authentification à partir des cookies
-            var authToken = HttpContext.Request.Cookies["authToken"];
-            if (string.IsNullOrEmpty(authToken))
-            {
-                return RedirectToLogin();
-            }        
-
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        var client = _httpClientFactory.CreateClient("GatewayClient");
+        var authToken = HttpContext.Request.Cookies["authToken"];
+        if (!string.IsNullOrEmpty(authToken))
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            var client = _httpClientFactory.CreateClient("GatewayClient");
-
-            // Récupérer le jeton d'authentification à partir des cookies
-            var authToken = HttpContext.Request.Cookies["authToken"];
-            if (!string.IsNullOrEmpty(authToken))
-            {
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
-            }
-            else
-            {
-                return RedirectToLogin();
-            }
-
-            var response = await client.PostAsJsonAsync("patient/create", Patient);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return RedirectToPage("/Index");
-            }
-            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                return RedirectToLogin();
-            }
-
-            // Gérer les autres erreurs de création
-            ModelState.AddModelError(string.Empty, "Erreur lors de la création du patient.");
-            return Page();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+        }
+        else
+        {
+            return RedirectToLogin();
         }
 
-        private IActionResult RedirectToLogin()
+        var response = await client.PostAsJsonAsync("patient/create", Patient); 
+
+        if (response.IsSuccessStatusCode)
         {
-            return RedirectToPage("/Login");
+            return RedirectToPage("/Index");
         }
+        else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            return RedirectToLogin();
+        }
+
+        ModelState.AddModelError(string.Empty, "Erreur lors de la création du patient.");
+        return Page();
+    }
+
+    private IActionResult RedirectToLogin()
+    {
+        return RedirectToPage("/Login");
     }
 }

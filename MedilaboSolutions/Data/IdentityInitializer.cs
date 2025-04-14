@@ -6,13 +6,13 @@ namespace MedilaboSolutionsBack1.Data
     {
         public static async Task Initialize(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            // Vérifie si la table Users contient des données
+            
             if (userManager.Users.Any())
             {
-                return; // La base de données est déjà initialisée
+                return; 
             }
 
-            // Create default roles
+            
             string[] roleNames = { "Organisateur", "Praticien" };
             foreach (var roleName in roleNames)
             {
@@ -22,7 +22,7 @@ namespace MedilaboSolutionsBack1.Data
                 }
             }
 
-            // Crée un Organisateur 
+             
             var organisateur = new IdentityUser
             {
                 UserName = "organisateur",

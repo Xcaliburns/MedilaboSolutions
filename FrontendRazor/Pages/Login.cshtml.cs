@@ -17,6 +17,8 @@ namespace FrontendRazor.Pages
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
+            Login = new FrontendRazor.Models.LoginModel(); // Initialize to avoid null
+            ErrorMessage = string.Empty; // Initialize to avoid null
         }
 
         [BindProperty]
@@ -42,13 +44,11 @@ namespace FrontendRazor.Pages
 
             if (response.IsSuccessStatusCode)
             {
-                // Handle successful login, e.g., set a cookie or redirect
                 var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
                 var authToken = loginResponse?.Token;
 
                 if (authToken != null)
                 {
-                    // Set the authToken as a secure cookie
                     HttpContext.Response.Cookies.Append("authToken", authToken, new CookieOptions
                     {
                         HttpOnly = true,
@@ -57,17 +57,15 @@ namespace FrontendRazor.Pages
                         Expires = DateTimeOffset.UtcNow.AddMinutes(30)
                     });
 
-                    // Decode the JWT token to get the roles
                     var handler = new JwtSecurityTokenHandler();
                     var jwtToken = handler.ReadJwtToken(authToken);
                     var roles = jwtToken.Claims.Where(c => c.Type == ClaimsIdentity.DefaultRoleClaimType).Select(c => c.Value).ToList();
 
-                    // Create claims and sign in the user
                     var claims = new List<Claim>
-                        {
-                            new Claim(ClaimTypes.Name, Login.Username),
-                            new Claim("AuthToken", authToken)
-                        };
+                            {
+                                new Claim(ClaimTypes.Name, Login.Username),
+                                new Claim("AuthToken", authToken)
+                            };
 
                     foreach (var role in roles)
                     {
@@ -90,7 +88,6 @@ namespace FrontendRazor.Pages
                 }
             }
 
-            // Handle login failure
             ErrorMessage = "Tentative de connexion échouée. Veuillez vérifier vos identifiants.";
             return Page();
         }

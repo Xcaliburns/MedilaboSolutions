@@ -1,10 +1,7 @@
 using FrontendRazor.Data;
-
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,24 +16,15 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 
-// Configure HttpClient to use the Ocelot Gateway URL
+
+builder.Services.AddTransient<AuthTokenHandler>();
+
+
 builder.Services.AddHttpClient("GatewayClient", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7214/");
-});
-
-// Configure CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSpecificOrigins",
-        builder =>
-        {
-            builder.WithOrigins("https://localhost:7134")
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowCredentials();
-        });
-});
+    client.BaseAddress = new Uri(builder.Configuration["GatewayUrl"]);
+})
+.AddHttpMessageHandler<AuthTokenHandler>();
 
 // Add Cookie Authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -46,8 +34,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/logout";
         options.AccessDeniedPath = "/login";
     });
-
-
 
 var app = builder.Build();
 
@@ -62,16 +48,12 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseCors("AllowSpecificOrigins");
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapRazorPages();
 
 app.Run();
