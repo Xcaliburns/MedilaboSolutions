@@ -12,10 +12,10 @@ WORKDIR /src
 RUN dotnet tool install -g dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
 
-COPY ["MedilaboSolutions/PatientService.csproj", "MedilaboSolutions/"]
-RUN dotnet restore "./MedilaboSolutions/PatientService.csproj"
+COPY ["PatientService/PatientService.csproj", "PatientService/"]
+RUN dotnet restore "./PatientService/PatientService.csproj"
 COPY . .
-WORKDIR "/src/MedilaboSolutions"
+WORKDIR "/src/PatientService"
 RUN dotnet build "./PatientService.csproj" -c Release -o /app/build
 
 # Étape de publication
