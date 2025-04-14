@@ -1,0 +1,30 @@
+﻿@page
+@model FrontendRazor.Pages.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<form method="post" autocomplete="off">
+    <div>
+        <label asp-for="Login.Username"></label>
+        <input asp-for="Login.Username" class="form-control" autocomplete="off" />
+        <span asp-validation-for="Login.Username" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Login.Password"></label>
+        <input asp-for="Login.Password" type="password" class="form-control" autocomplete="off" />
+        <span asp-validation-for="Login.Password" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
