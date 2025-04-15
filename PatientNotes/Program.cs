@@ -18,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add Identity services
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
@@ -33,10 +34,9 @@ builder.Services.AddSingleton(sp =>
 
     if (string.IsNullOrEmpty(settings.ConnectionString))
     {
-        throw new InvalidOperationException(" MongoDB ConnectionString est NULL. Vérifie l’injection des paramètres.");
-    }
+        throw new InvalidOperationException(" MongoDB ConnectionString est NULL. Vérifie l’injection des paramètres.");    }
 
-    Console.WriteLine($" ConnectionString MongoDB utilisée : {settings.ConnectionString}");
+  
 
     var client = new MongoClient(settings.ConnectionString);
     var database = client.GetDatabase(settings.DatabaseName);
