@@ -1,7 +1,6 @@
 {
   "Routes": [
-
-
+    // Route for authentication login
     {
       "UpstreamPathTemplate": "/auth/login",
       "UpstreamHttpMethod": [ "POST" ],
@@ -15,6 +14,7 @@
       ]
     },
 
+    // Route for getting patient by ID
     {
       "DownstreamPathTemplate": "/api/Patient/{id}",
       "DownstreamScheme": "http",
@@ -34,6 +34,8 @@
         "AllowedScopes": []
       }
     },
+
+    // Route for updating or creating patient by ID
     {
       "DownstreamPathTemplate": "/api/Patient/{id}",
       "DownstreamScheme": "http",
@@ -50,6 +52,8 @@
         "AllowedScopes": []
       }
     },
+
+    // Route for getting all patients
     {
       "DownstreamPathTemplate": "/api/Patient",
       "DownstreamScheme": "http",
@@ -69,6 +73,8 @@
         "AllowedScopes": []
       }
     },
+
+    // Route for getting or creating notes
     {
       "DownstreamPathTemplate": "/api/Note",
       "DownstreamScheme": "http",
@@ -88,6 +94,8 @@
         "AllowedScopes": []
       }
     },
+
+    // Route for getting notes by patient ID
     {
       "DownstreamPathTemplate": "/api/note/patient/{id}",
       "DownstreamScheme": "http",
@@ -107,6 +115,8 @@
         "AllowedScopes": []
       }
     },
+
+    // Route for deleting note by ID
     {
       "DownstreamPathTemplate": "/api/Note/{id}",
       "DownstreamScheme": "http",
@@ -123,6 +133,8 @@
         "AllowedScopes": []
       }
     },
+
+    // Route for getting diabetes report by patient ID
     {
       "DownstreamPathTemplate": "/api/DiabeteReport/Report/{patientId}",
       "DownstreamScheme": "http",
