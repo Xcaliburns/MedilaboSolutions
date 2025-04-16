@@ -9,6 +9,7 @@ public interface IPatientRepository
 
     // Ajout de la méthode pour créer une adresse
     void CreateAdresse(Adresse adresse);
+    void UpdateAdresse(Adresse adresse);
 
     // Une méthode pour récupérer une adresse par son Libellé
     Adresse GetAdresseByLibele(string libele);

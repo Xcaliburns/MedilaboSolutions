@@ -138,6 +138,17 @@ namespace MedilaboSolutionsBack1.Repositories
             return _context.Adresses.FirstOrDefault(a => a.Libele == libele);
         }
 
+        public void UpdateAdresse(Adresse adresse)
+        {
+            var existingAdresse = _context.Adresses.FirstOrDefault(a => a.Id == adresse.Id);
+    if (existingAdresse != null)
+    {
+        existingAdresse.Libele = adresse.Libele;
+        _context.Adresses.Update(existingAdresse);
+        _context.SaveChanges();
+    }
+        }
+
 
     }
 }
