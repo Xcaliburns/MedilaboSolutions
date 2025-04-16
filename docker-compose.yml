@@ -41,7 +41,7 @@ services:
       context: .
       dockerfile: PatientService/Dockerfile
     ports:
-      - "8080:8080"
+      - "8081:8080"
       
     environment:  
       - ASPNETCORE_ENVIRONMENT=Development
@@ -60,7 +60,7 @@ services:
       context: .
       dockerfile: PatientNotes/Dockerfile
     ports:
-      - "8090:8090"
+      - "8091:8090"
       
     environment:
       - MedilaboNotesData__ConnectionString=mongodb://root:YourStrongPassword@mongodb:27017/?authSource=admin
@@ -89,7 +89,13 @@ services:
         - JwtSettings__Issuer=YourIssuer
         - JwtSettings__Audience=YourAudience
         - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
-        
+        - AllowedOrigins__0=http://localhost:5000
+        - AllowedOrigins__1=http://localhost:5011
+        - AllowedOrigins__2=http://localhost:5021
+        - AllowedOrigins__3=http://localhost:8081
+        - AllowedOrigins__4=http://localhost:8091      
+
+
     depends_on:
       - patientservice
       - patientnotes
@@ -103,7 +109,7 @@ services:
       context: .
       dockerfile: DiabeteRiskReportService/Dockerfile
     ports:
-      - "5020:5020"
+      - "5021:5020"
       
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -126,7 +132,7 @@ services:
       context: .
       dockerfile: FrontendRazor/Dockerfile
     ports:
-      - "5010:5010"
+      - "5011:5010"
       
     environment:
         - ASPNETCORE_ENVIRONMENT=Development

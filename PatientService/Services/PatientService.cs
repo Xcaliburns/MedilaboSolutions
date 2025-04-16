@@ -43,37 +43,6 @@ namespace MedilaboSolutionsBack1.Services
             } : new PatientDto(); 
         }
 
-
-        //public void UpdatePatient(PatientDto patientDto)
-        //{
-        //    var patient = _patientRepository.GetPatientById(patientDto.Id);
-        //    if (patient != null)
-        //    {
-        //        patient.Nom = patientDto.Nom;
-        //        patient.Prenom = patientDto.Prenom;
-        //        patient.Genre = patientDto.Genre;
-        //        patient.DateDeNaissance = patientDto.DateDeNaissance;
-        //        patient.Telephone = patientDto.Telephone;
-
-        //        if (patientDto.Adresse != null)
-        //        {
-        //            var existingAdresse = _patientRepository.GetAdresseByLibele(patientDto.Adresse.Libele);
-        //            if (existingAdresse != null)
-        //            {
-        //                patient.Adresse = new AdresseDto { Libele = existingAdresse.Libele ?? string.Empty };
-        //            }
-        //            else
-        //            {
-        //                var newAdresse = new Adresse { Libele = patientDto.Adresse.Libele };
-        //                _patientRepository.CreateAdresse(newAdresse);
-        //                patient.Adresse = new AdresseDto { Libele = newAdresse.Libele ?? string.Empty };
-        //            }
-        //        }
-
-        //        _patientRepository.UpdatePatient(patient);
-        //    }
-        //}
-
         public void UpdatePatient(PatientDto patientDto)
         {
             var patient = _patientRepository.GetPatientById(patientDto.Id);
