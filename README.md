@@ -15,7 +15,7 @@ Ce projet développé avec **.NET** implémente une solution en microservices po
 - se placer au niveau de la racine du projet : cd MedilaboSolutions
 - git checkout dev (la branche dev est la branche fonctionnelle pour le moment)
 - effectuer la commande : docker-compose up --build
-- http://localhost:5010/ depuis un navigateur
+- http://localhost:5011/ depuis un navigateur
 - login :
     - rôle organisateur : organisateur / Organisateur@123
     - rôle praticien    : praticien    / Praticien@123
