@@ -14,6 +14,7 @@ Ce projet développé avec **.NET** implémente une solution en microservices po
 - git clone https://github.com/Xcaliburns/MedilaboSolutions.git 
 - se placer au niveau de la racine du projet : cd MedilaboSolutions
 - git checkout dev (la branche dev est la branche fonctionnelle pour le moment)
+- dotnet restore 
 - effectuer la commande : docker-compose up --build
 - http://localhost:5011/ depuis un navigateur
 - login :
