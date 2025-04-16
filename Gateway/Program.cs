@@ -40,30 +40,17 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<CustomJwtBearerEvents>();
 
-builder.Services.AddHttpClient("AuthenticatedClient", client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7214");
-}).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-{
-    UseCookies = true
-});
-
+// Configure CORS
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
         builder =>
         {
-            builder.WithOrigins(
-                
-                "http://localhost:5000",   // Gateway HTTP
-                "http://localhost:5010",  // FrontendRazor
-                "http://localhost:8080",  // PatientService
-                "http://localhost:8090",  // PatientNotes
-                "http://localhost:5020"   // DiabeteRiskReportService
-            )
+            builder.WithOrigins(allowedOrigins)            
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .AllowCredentials(); // Autoriser les cookies si besoin
+            .AllowCredentials(); // Authorize cookies if needed
         });
 });
 
@@ -78,25 +65,6 @@ app.UseCors("AllowSpecificOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Middleware to log the presence of the authToken cookie
-app.Use(async (context, next) =>
-{
-    var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    if (context.Request.Cookies.ContainsKey("authToken"))
-    {
-        var cookie = context.Request.Cookies["authToken"];
-        logger.LogInformation("authToken cookie is present in the request.");
-        logger.LogInformation($"authToken cookie value: {cookie}");
-    }
-    else
-    {
-        logger.LogInformation("authToken cookie is NOT present in the request.");
-    }
-    await next.Invoke();
-    logger.LogInformation("Finished handling request.");
-});
-
 await app.UseOcelot();
 
 app.Run();

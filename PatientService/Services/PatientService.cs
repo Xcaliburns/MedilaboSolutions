@@ -43,7 +43,6 @@ namespace MedilaboSolutionsBack1.Services
             } : new PatientDto(); 
         }
 
-
         public void UpdatePatient(PatientDto patientDto)
         {
             var patient = _patientRepository.GetPatientById(patientDto.Id);
@@ -60,10 +59,14 @@ namespace MedilaboSolutionsBack1.Services
                     var existingAdresse = _patientRepository.GetAdresseByLibele(patientDto.Adresse.Libele);
                     if (existingAdresse != null)
                     {
+                        // Update the existing address
+                        existingAdresse.Libele = patientDto.Adresse.Libele;
+                        _patientRepository.UpdateAdresse(existingAdresse);
                         patient.Adresse = new AdresseDto { Libele = existingAdresse.Libele ?? string.Empty };
                     }
                     else
                     {
+                        // Create a new address if it doesn't exist
                         var newAdresse = new Adresse { Libele = patientDto.Adresse.Libele };
                         _patientRepository.CreateAdresse(newAdresse);
                         patient.Adresse = new AdresseDto { Libele = newAdresse.Libele ?? string.Empty };
@@ -75,7 +78,7 @@ namespace MedilaboSolutionsBack1.Services
         }
 
 
-      public void CreatePatient(PatientDto patientDto)
+        public void CreatePatient(PatientDto patientDto)
 {
     var patient = new Patient
     {

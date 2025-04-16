@@ -1,6 +1,6 @@
 {
   "Routes": [
-
+    // Route for authentication login
     {
       "UpstreamPathTemplate": "/auth/login",
       "UpstreamHttpMethod": [ "POST" ],
@@ -14,6 +14,7 @@
       ]
     },
 
+    // Route for getting patient by ID
     {
       "DownstreamPathTemplate": "/api/Patient/{id}",
       "DownstreamScheme": "http",
@@ -24,107 +25,135 @@
         }
       ],
       "UpstreamPathTemplate": "/patient/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "POST" ],
+      "UpstreamHttpMethod": [ "GET" ],
       "CacheOptions": {
         "TtlSeconds": 120
       },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
-         "AllowedScopes": []
-        }
-      },
-      {
-        "DownstreamPathTemplate": "/api/Patient",
-        "DownstreamScheme": "http",
-        "DownstreamHostAndPorts": [
-          {
-            "Host": "patientservice",
-            "Port": 8080
-          }
-        ],
-        "UpstreamPathTemplate": "/patient",
-        "UpstreamHttpMethod": [ "GET" ],
-        "CacheOptions": {
-          "TtlSeconds": 120
-        },
-        "AuthenticationOptions": {
-           "AuthenticationProviderKey": "Bearer",
-           "AllowedScopes": []
-         }
-       },
+        "AllowedScopes": []
+      }
+    },
+
+    // Route for updating or creating patient by ID
+    {
+      "DownstreamPathTemplate": "/api/Patient/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
         {
-          "DownstreamPathTemplate": "/api/Note",
-          "DownstreamScheme": "http",
-          "DownstreamHostAndPorts": [
-            {
-              "Host": "patientnotes",
-              "Port": 8090
-            }
-          ],
-          "UpstreamPathTemplate": "/api/note",
-          "UpstreamHttpMethod": [ "GET", "POST" ],
-          "CacheOptions": {
-            "TtlSeconds": 120
-          },
-            "AuthenticationOptions": {
-              "AuthenticationProviderKey": "Bearer",
-              "AllowedScopes": []
-            }
-          },
-          {
-            "DownstreamPathTemplate": "/api/note/patient/{id}",
-            "DownstreamScheme": "http",
-            "DownstreamHostAndPorts": [
-              {
-                "Host": "patientnotes",
-                "Port": 8090
-              }
-            ],
-            "UpstreamPathTemplate": "/note/patient/{id}",
-            "UpstreamHttpMethod": [ "GET" ],
-            "CacheOptions": {
-              "TtlSeconds": 120
-            },
-              "AuthenticationOptions": {
-                "AuthenticationProviderKey": "Bearer",
-                "AllowedScopes": []
-              }
-            },
-            {
-              "DownstreamPathTemplate": "/api/Note/{id}",
-              "DownstreamScheme": "http",
-              "DownstreamHostAndPorts": [
-                {
-                  "Host": "patientnotes",
-                  "Port": 8090
-                }
-              ],
-              "UpstreamPathTemplate": "/api/note/{id}",
-              "UpstreamHttpMethod": [ "DELETE" ],
-              "AuthenticationOptions": {
-                "AuthenticationProviderKey": "Bearer",
-                "AllowedScopes": []
-              }
-            },
-            {
-              "DownstreamPathTemplate": "/api/DiabeteReport/Report/{patientId}",
-              "DownstreamScheme": "http",
-              "DownstreamHostAndPorts": [
-                {
-                  "Host": "diabeteriskreportservice",
-                  "Port": 5020
-                }
-              ],
-              "UpstreamPathTemplate": "/report/{patientId}",
-              "UpstreamHttpMethod": [ "GET" ],
-              "CacheOptions": {
-                "TtlSeconds": 120
-              },
-                "AuthenticationOptions": {
-                  "AuthenticationProviderKey": "Bearer",
-                  "AllowedScopes": []
-                }
-              }
+          "Host": "patientservice",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/patient/{id}",
+      "UpstreamHttpMethod": [ "PUT", "POST" ],      
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+
+    // Route for getting all patients
+    {
+      "DownstreamPathTemplate": "/api/Patient",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "patientservice",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/patient",
+      "UpstreamHttpMethod": [ "GET" ],
+      "CacheOptions": {
+        "TtlSeconds": 120
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+
+    // Route for getting or creating notes
+    {
+      "DownstreamPathTemplate": "/api/Note",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "patientnotes",
+          "Port": 8090
+        }
+      ],
+      "UpstreamPathTemplate": "/api/note",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "CacheOptions": {
+        "TtlSeconds": 120
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+
+    // Route for getting notes by patient ID
+    {
+      "DownstreamPathTemplate": "/api/note/patient/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "patientnotes",
+          "Port": 8090
+        }
+      ],
+      "UpstreamPathTemplate": "/note/patient/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "CacheOptions": {
+        "TtlSeconds": 120
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+
+    // Route for deleting note by ID
+    {
+      "DownstreamPathTemplate": "/api/Note/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "patientnotes",
+          "Port": 8090
+        }
+      ],
+      "UpstreamPathTemplate": "/api/note/{id}",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+
+    // Route for getting diabetes report by patient ID
+    {
+      "DownstreamPathTemplate": "/api/DiabeteReport/Report/{patientId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "diabeteriskreportservice",
+          "Port": 5020
+        }
+      ],
+      "UpstreamPathTemplate": "/report/{patientId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "CacheOptions": {
+        "TtlSeconds": 120
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://gateway:5000"

@@ -54,10 +54,16 @@ namespace DiabeteRiskReportService.Services
         public async Task<int> getTriggersNumberAsync(int patientId, string authToken)
         {
             var triggerList = await _diabeteReportRepository.GetPatientNotes(patientId, authToken);
-            var triggersToCheck = new List<string> { "Hémoglobine A1C", "Microalbumine", "Taille", "Poids", "Fumeur", "Fumeuse", "Anormal", "Cholestérol", "Vertiges", "Rechute", "Réaction", "Anticorps" };
+            var triggersToCheck = new List<string>
+            {
+                "Hémoglobine A1C", "Microalbumine", "Taille",
+                "Poids", "Fumeur", "Fumeuse",
+                "Anormal", "Cholestérol", "Vertiges",
+                "Rechute", "Réaction", "Anticorps" 
+            };
 
             if (triggerList == null || triggerList.Count == 0)
-            {               
+            {
                 return 0;
             }
 
@@ -65,7 +71,7 @@ namespace DiabeteRiskReportService.Services
                 .SelectMany(note => triggersToCheck, (note, trigger) => new { note, trigger })
                 .Count(x => x.note.Note.Contains(x.trigger, StringComparison.OrdinalIgnoreCase));
 
-           
+
             return triggerNumber;
         }
 
@@ -81,19 +87,20 @@ namespace DiabeteRiskReportService.Services
             await Task.WhenAll(triggerTask, patientTask);
 
             int triggerNumber = triggerTask.Result;
-            
+
             var patient = patientTask.Result;
 
-            if (patient == null || patient.DateDeNaissance == default || string.IsNullOrEmpty(patient.Nom) || string.IsNullOrEmpty(patient.Prenom) || string.IsNullOrEmpty(patient.Genre))
+            if (patient == null || patient.DateDeNaissance == default ||
+                string.IsNullOrEmpty(patient.Nom) ||
+                string.IsNullOrEmpty(patient.Prenom) ||
+                string.IsNullOrEmpty(patient.Genre))
             {
-                
+
                 return defaultRiskLevel;
             }
 
             int age = DateTime.Now.Year - patient.DateDeNaissance.Year;
             string genre = patient.Genre;
-
-            Console.WriteLine($"Patient ID: {patientId}, Age: {age}, Genre: {genre}, TriggerNumber: {triggerNumber}");
 
             if (age <= 0) return defaultRiskLevel;
 
