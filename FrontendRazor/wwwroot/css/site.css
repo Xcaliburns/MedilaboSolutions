@@ -73,4 +73,26 @@ body {
 .note-container {
     max-width:800px;
     margin:auto;
+    margin-top:20px;
+}
+
+/*couleurs de fond pour les risques*/
+.patient-risk-level.none {
+    background-color: green;    
+    color: white;
+}
+
+.patient-risk-level.borderline {
+    background-color: yellow;   
+    color: black;
+}
+
+.patient-risk-level.in-danger {
+    background-color: orange;    
+    color: white;
+}
+
+.patient-risk-level.early-onset {
+    background-color: red;    
+    color: white;
 }
