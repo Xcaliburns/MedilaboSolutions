@@ -25,7 +25,7 @@
         }
       ],
       "UpstreamPathTemplate": "/patient/{id}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "GET", "PUT", "POST" ],      
       "CacheOptions": {
         "TtlSeconds": 120
       },
@@ -33,25 +33,7 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
-    },
-
-    // Route for updating or creating patient by ID
-    {
-      "DownstreamPathTemplate": "/api/Patient/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "patientservice",
-          "Port": 8080
-        }
-      ],
-      "UpstreamPathTemplate": "/patient/{id}",
-      "UpstreamHttpMethod": [ "PUT", "POST" ],      
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
-    },
+    },   
 
     // Route for getting all patients
     {

@@ -109,17 +109,12 @@ namespace DiabeteRiskReportService.Services
 
         private string DetermineRiskLevel(int age, string genre, int triggerNumber)
         {
-            if (age > 30)
-            {
-                if (triggerNumber >= 2 && triggerNumber <= 5) return "Borderline";
-                if (triggerNumber >= 6 && triggerNumber <= 7) return "In Danger";
-                if (triggerNumber >= 8) return "Early Onset";
-            }
-            else
-            {
-                if (genre == "H" && triggerNumber >= 3) return triggerNumber >= 5 ? "Early Onset" : "In Danger";
-                if (genre == "F" && triggerNumber >= 4) return triggerNumber >= 7 ? "Early Onset" : "In Danger";
-            }
+
+            if (triggerNumber==0) return "None";
+            if (age >=30 && triggerNumber >= 2 && triggerNumber <=5) return "BorderLine";
+            if (genre == "H" && age < 30 && triggerNumber >= 3) return triggerNumber >= 5 ? "Early Onset" : "In Danger";
+            if (genre == "F" && age < 30 && triggerNumber >= 4) return triggerNumber >= 7 ? "Early Onset" : "In Danger";
+            if (age >=30 && triggerNumber>=8) return "Early Onset";
 
             return "None";
         }

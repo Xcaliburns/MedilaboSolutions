@@ -26,6 +26,10 @@ namespace FrontendRazor.Pages
         [BindProperty]
         public NoteRequest newNote { get; set; } = new NoteRequest();
 
+       
+
+
+
         public async Task OnGetAsync(int id)
         {
             var client = _httpClientFactory.CreateClient("GatewayClient");
