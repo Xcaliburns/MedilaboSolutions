@@ -38,4 +38,4 @@ Ce projet développé avec **.NET** implémente une solution en microservices po
 ### 🐳 Conteneurs Docker
 - Utiliser des images Docker légères comme **mcr.microsoft.com/dotnet/runtime:8.0-alpine**(quand cela est possible)
 - Nettoyer les conteneurs inutilisés régulièrement : 
-  docker system prune -f
+  docker system prune -f (en creant un service dédié au nettoyage)
