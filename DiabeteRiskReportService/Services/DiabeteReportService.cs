@@ -30,7 +30,7 @@ namespace DiabeteRiskReportService.Services
             return jsonReport;
         }
 
-        public async Task<PatientDto> getPatientAsync(int patientId, string authToken)
+        public async Task<PatientDto?> getPatientAsync(int patientId, string authToken)
         {
             var patient = await _diabeteReportRepository.GetPatientData(patientId, authToken);
             if (patient != null)
@@ -51,7 +51,7 @@ namespace DiabeteRiskReportService.Services
         }
 
 
-        public async Task<int> getTriggersNumberAsync(int patientId, string authToken)
+        public async Task<int> GetTriggersNumberAsync(int patientId, string authToken)
         {
             var triggerList = await _diabeteReportRepository.GetPatientNotes(patientId, authToken);
             var triggersToCheck = new List<string>
@@ -81,7 +81,7 @@ namespace DiabeteRiskReportService.Services
             const string defaultRiskLevel = "None";
 
 
-            var triggerTask = getTriggersNumberAsync(patientId, authToken);
+            var triggerTask = GetTriggersNumberAsync(patientId, authToken);
             var patientTask = getPatientAsync(patientId, authToken);
 
             await Task.WhenAll(triggerTask, patientTask);

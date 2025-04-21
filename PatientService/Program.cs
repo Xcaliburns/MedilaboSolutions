@@ -15,8 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure())
-        .LogTo(Console.WriteLine, LogLevel.Information));
+        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure()));
+        
 
 
 // Configure Identity
@@ -47,18 +47,18 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Configure CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSpecificOrigins",
-        builder =>
-        {
-            builder.WithOrigins(             
-                "http://localhost:5000")  // Gateway HTTP)
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowCredentials(); 
-        });
-});
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowSpecificOrigins",
+//        builder =>
+//        {
+//            builder.WithOrigins(             
+//                "http://localhost:5000")  // Gateway HTTP)
+//                   .AllowAnyMethod()
+//                   .AllowAnyHeader()
+//                   .AllowCredentials(); 
+//        });
+//});
 
 // Configure Authorization
 builder.Services.AddAuthorization(options =>
