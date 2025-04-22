@@ -13,7 +13,7 @@ services:
     ports:
       - "1433:1433"
     environment:
-      SA_PASSWORD: "YourStrong!Passw0rd"
+      SA_PASSWORD: ${SA_PASSWORD}
       ACCEPT_EULA: "Y"
     restart: always
     volumes:
@@ -28,7 +28,7 @@ services:
       - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: YourStrongPassword
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - mongo_data:/data/db
     networks:
@@ -44,11 +44,11 @@ services:
       - "8081:8080"
       
     environment:  
-      - ASPNETCORE_ENVIRONMENT=Development
-      - JwtSettings__Issuer=YourIssuer
-      - JwtSettings__Audience=YourAudience
-      - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=PatientDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - JwtSettings__Issuer=${JwtSettings_Issuer}
+      - JwtSettings__Audience=${JwtSettings_Audience}
+      - JwtSettings__SecretKey=${JwtSettings_SecretKey}
+      - ConnectionStrings__DefaultConnection=${ConnectionStrings_DefaultConnection}
     depends_on:
       - sqlserver  
     networks:
@@ -63,13 +63,13 @@ services:
       - "8091:8090"
       
     environment:
-      - MedilaboNotesData__ConnectionString=mongodb://root:YourStrongPassword@mongodb:27017/?authSource=admin
-      - MedilaboNotesData__DatabaseName=MedilaboNotesData
-      - MedilaboNotesData__CollectionName=PatientNotes
-      - ASPNETCORE_ENVIRONMENT=Development
-      - JwtSettings__Issuer=YourIssuer
-      - JwtSettings__Audience=YourAudience
-      - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
+      - MedilaboNotesData__ConnectionString=${MedilaboNotesData_ConnectionString}
+      - MedilaboNotesData__DatabaseName=${MedilaboNotesData_DatabaseName}
+      - MedilaboNotesData__CollectionName=${MedilaboNotesData_CollectionName}
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - JwtSettings__Issuer=${JwtSettings_Issuer}
+      - JwtSettings__Audience=${JwtSettings_Audience}
+      - JwtSettings__SecretKey=${JwtSettings_SecretKey}
     depends_on:
       - mongodb
     networks:
@@ -85,15 +85,15 @@ services:
       - "5000:5000"
       
     environment: 
-        - ASPNETCORE_ENVIRONMENT=Development
-        - JwtSettings__Issuer=YourIssuer
-        - JwtSettings__Audience=YourAudience
-        - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
-        - AllowedOrigins__0=http://localhost:5000
-        - AllowedOrigins__1=http://localhost:5011
-        - AllowedOrigins__2=http://localhost:5021
-        - AllowedOrigins__3=http://localhost:8081
-        - AllowedOrigins__4=http://localhost:8091      
+        - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+        - JwtSettings__Issuer=${JwtSettings_Issuer}
+        - JwtSettings__Audience=${JwtSettings_Audience}
+        - JwtSettings__SecretKey=${JwtSettings_SecretKey}
+        - AllowedOrigins__0=${AllowedOrigins_0}
+        - AllowedOrigins__1=${AllowedOrigins_1}
+        - AllowedOrigins__2=${AllowedOrigins_2}
+        - AllowedOrigins__3=${AllowedOrigins_3}
+        - AllowedOrigins__4=${AllowedOrigins_4}      
 
 
     depends_on:
@@ -112,11 +112,11 @@ services:
       - "5021:5020"
       
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - JwtSettings__Issuer=YourIssuer
-      - JwtSettings__Audience=YourAudience
-      - JwtSettings__SecretKey=LeGrandSecretencorePlusplusLong!!!
-      - GatewayUrl=http://gateway:5000/
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - JwtSettings__Issuer=${JwtSettings_Issuer}
+      - JwtSettings__Audience=${JwtSettings_Audience}
+      - JwtSettings__SecretKey=${JwtSettings_SecretKey}
+      - GatewayUrl=${GatewayUrl}
     
     depends_on:
       - gateway
@@ -135,8 +135,8 @@ services:
       - "5011:5010"
       
     environment:
-        - ASPNETCORE_ENVIRONMENT=Development
-        - GatewayUrl=http://gateway:5000
+        - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+        - GatewayUrl=${GatewayUrl}
     depends_on:
       - gateway
     networks:
