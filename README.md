@@ -10,6 +10,7 @@ Ce projet développé avec **.NET** implémente une solution en microservices po
 - **Conteneurs** : Docker
 
 #### 1. **Cloner le projet et éxecuter la solution**
+- Docker doit etre installé. https://www.docker.com/
 - Avant de pouvoir lancer le projet, il faut récupérer les fichiers sources en clonant le dépôt GitHub. Utilisez la commande suivante dans votre terminal :
 - git clone https://github.com/Xcaliburns/MedilaboSolutions.git 
 - se placer au niveau de la racine du projet : cd MedilaboSolutions
@@ -38,4 +39,4 @@ Ce projet développé avec **.NET** implémente une solution en microservices po
 ### 🐳 Conteneurs Docker
 - Utiliser des images Docker légères comme **mcr.microsoft.com/dotnet/runtime:8.0-alpine**(quand cela est possible)
 - Nettoyer les conteneurs inutilisés régulièrement : 
-  docker system prune -f
+  docker system prune -f (en creant un service dédié au nettoyage)
